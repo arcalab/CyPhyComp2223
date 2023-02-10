@@ -1,12 +1,3 @@
-<style>
-td:empty {
-  visibility: hidden;
-}
-th:empty {
-  visibility: hidden;
-}
-</style>
-
 # Introduction and objectives
 
 Welcome to the webpage of the module "Cyber-Physical Computation",
