@@ -1,7 +1,7 @@
 # Introduction and objectives
 
 Welcome to the webpage of the module "Cyber-Physical Computation",
-edition 2021/2022.
+edition 2022/2023.
 
 Cyber-physical systems are networks of computational devices that
 closely interact with physical processes in order to reach a
