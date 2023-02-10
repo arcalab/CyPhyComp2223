@@ -65,7 +65,8 @@ At the end of the module, the student will:
 | 23 Mar. 2022 | Extra features of Uppaal. The logic CTL and its application to the verification of Timed Systems [file:timed-automata2.pdf]((lides)]).      |
 | 25 Mar. 2022 | Tackling the adventurers' problem with Uppaal [file:Adventurers/adventurers.pdf]((description o the problem)]).                                     |
 | 30 Mar. 2022 | Continuation of the previous lecture.                                                                           |
-| 06 Apr. 2022 | Recalling Haskell [file:lectureCPC.hs]((ile)]).                   -->                                                                     |
+| 06 Apr. 2022 | Recalling Haskell [file:lectureCPC.hs]((ile)]).                   |
+-->                                                                     
 
 
 # Assessment
