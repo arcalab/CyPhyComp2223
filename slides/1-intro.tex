@@ -2,31 +2,7 @@
 \usepackage{etex} % fixes new-dimension error
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
-\input{macros/macros}
-%-------------- template --------------------------------------------------
-\usetheme{metropolis}
-\metroset{block=fill}
-%\usetheme{Boadilla}
 
-% Configuring the foot line
-\setbeamertemplate{footline}
-{
-  \leavevmode%
-  \hbox{%
-  \begin{beamercolorbox}[wd=.4\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
-    \usebeamerfont{author in head/foot}\insertshortauthor
-  \end{beamercolorbox}%
-  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
-    \usebeamerfont{title in head/foot}\insertsection
-  \end{beamercolorbox}%
-  \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
-    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
-  \end{beamercolorbox}}%
-  \vskip0pt%
-}
-% No configuration symbols
-\setbeamertemplate{navigation symbols}{}
-%----------------------------------------------------------------------------
 \usepackage{graphicx,amsmath}
 \usepackage{stmaryrd} % cf. interleave
 \usepackage{booktabs}
@@ -43,7 +19,11 @@
 \usepackage{pgfplots}
 \usepackage{textcomp}
 
-\usetikzlibrary{arrows.meta, calc, fit, tikzmark}
+\input{macros/macros}
+%-------------- template --------------------------------------------------
+\input{macros/beamerconf}
+%----------------------------------------------------------------------------
+
 %------ using pstricks (rnode etc) ------------------------------------------
 % \usepackage{pstricks,pst-node,pst-text,pst-3d}
 % ------ using color ---------------------------------------------------------
@@ -244,6 +224,56 @@
   \end{minipage}
 
 \end{frame}
+
+
+\begin{slide}{Syllabus}
+  \frsplitt{
+    \begin{itemize}
+      \item CSS: a simple language for concurrency
+      \begin{itemize}
+        \item Syntax
+        \item Semantics
+        \item Equivalence
+      \end{itemize}
+      \item  \alert{Timed Automata}
+      \begin{itemize}
+        \item Syntax
+        \item Semantics (composition, Zeno)
+        \item Equivalence
+        \item \structure{UPPAAL tool}
+        \begin{itemize}
+           \item Specification
+           \item CTL and Verification
+         \end{itemize}
+      \end{itemize}
+    \end{itemize}
+  }{
+    \begin{itemize}
+      \item A simple C-like language
+      \begin{itemize}
+        \item Syntax
+        \item Semantics (operational)
+      \end{itemize}
+      \item \alert{Hybrid-language}: adding differential equations
+      \begin{itemize}
+        \item Syntax
+        \item Semantics
+        \item \structure{Lince tool}
+        \begin{itemize}
+          \item Specification
+          \item Analysis
+        \end{itemize}
+      \end{itemize}
+      \item \alert{Monads}: semantics with computational effects
+        % \begin{itemize}
+        %   \item Modelling Cyber-physical behaviour with Monads
+        %   \item Hybrid Monad
+        %   \item Monad Combination
+        % \end{itemize}
+    \end{itemize}
+  }
+\end{slide}
+
 
 \section{Logistics}
 

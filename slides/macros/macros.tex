@@ -1,3 +1,5 @@
+\usepackage{transparent}
+\usepackage{xspace}
 %%%%%%%%%%%%% Macros
 \newcommand{\Ban}{\catfont{Ban}}
 \newcommand{\Met}{\catfont{Met}}
@@ -194,4 +196,86 @@
 \newcommand{\exerciseAdd}{\stepcounter{cExercise}}
 \newcommand{\doExercise}[3][0mm]{\begin{exampleblock}{\exercise #2}\wrap{\rule{0pt}{#1}}#3\end{exampleblock}}
 \newcommand{\doSimpleExercise}[2][0mm]{\begin{exampleblock}{}\wrap{\rule{0pt}{#1}}\structure{\textbf{\exercise} #2}\end{exampleblock}}
+
+% Slide
+\newenvironment{slide}[1]{\begin{frame}\frametitle{#1}}{\end{frame}}
+
+% Misc by José
+\newcommand{\wrap}[2][]{\begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+\newcommand{\mwrap}[1]{\ensuremath{\begin{array}{@{}c@{}}#1\end{array}}}
+\def\trans#1{\xrightarrow{#1}}  % - a - > 
+\def\Trans#1{\stackrel{#1}{\Longrightarrow}} % =a=> 
+\newcommand{\transp}[2][35]{\color{fg!#1}#2}
+\newcommand{\transpt}[2][.35]{\tikz{\node[inner sep=1pt,fill opacity=0.5]{#2}}}
+\newcommand{\faded}[2][0.4]{{\transparent{#1}#2}} % alternative to "transp" using transparent package
+\newcommand{\set}[1]{\left\{ #1 \right\}} % {a,b,...z}
+\newcommand{\mi}[1]{\ensuremath{\mathit{#1}}\xspace}
+\newcommand{\mf}[1]{\ensuremath{\mathsf{#1}}\xspace}
+\def\Act{N}
+\def\cnil{\mathbf{0}}
+\def\cpf#1#2{#1 . #2}                           % a.P
+\def\cou#1#2{#1 \mathbin{+} #2}                 % P + Q
+%\def\crt#1#2{\mathbin{#1 \setminus_{#2}}}       % P \ A
+%\def\crtt#1#2{\mathbin{#1 \setminus\!\setminus_{#2}}}       % P \ A
+%\def\crt#1#2{\mathsf{new}\, #2\;  #1}       % P \ A
+\def\crt#1#2{#1 \backslash #2}       % P \ A
+%\def\crn#1#2{\{#2\}\, #1}                  % P[f]
+\def\ainv#1{\overline{#1}}
+
+
+\def\crn#1#2{\mathbin{#1[#2]}}                  % P[f]
+\def\couit#1#2{\Sigma_{#1}#2}                  %  + i=1,n
+\def\cpar#1#2{#1 \mid #2}                       %  |
+\def\ctpar#1#2{#1 \parallel #2}                       %  |
+\def\cpars#1#2#3{#1 \mid_{#3} #2}               %  |S
+
+% Spliting frames in 2 columns
+\newcommand{\frsplit}[3][.48]{
+  \begin{columns}%[T] % align columns
+  \begin{column}{#1\textwidth} #2 \end{column} ~~~
+  \begin{column}{#1\textwidth} #3 \end{column} \end{columns}
+}
+\newcommand{\frsplitdiff}[4]{
+  \begin{columns}%[T] % align columns
+  \begin{column}{#1\textwidth} #3 \end{column} ~~~
+  \begin{column}{#2\textwidth} #4 \end{column} \end{columns}
+}
+\newcommand{\frsplitt}[3][.48]{
+  \begin{columns}[T] % align columns
+  \begin{column}{#1\textwidth} #2 \end{column} ~~~
+  \begin{column}{#1\textwidth} #3 \end{column} \end{columns}
+}
+\newcommand{\col}[2][.48]{\begin{column}{#1\textwidth} #2 \end{column}}
+\newcommand{\colb}[3][.48]{\begin{column}{#1\textwidth} \begin{block}{#2} #3 \end{block} \end{column}}
+
+\newcommand{\typerule}[4][]{\ensuremath{\begin{array}[#1]{c}\textsf{\scriptsize ({#2})} \\#3 \\\hline\raisebox{-3pt}{\ensuremath{#4}}\end{array}}}
+\newcommand{\styperule}[3][]{\ensuremath{\begin{array}[#1]{c} #2 \\[0.5mm]\hline\raisebox{-4pt}{\ensuremath{#3}}\end{array}}}
+\newcommand{\shrk}{\vspace{-3mm}}
+
+
+%%%%% Tikz
+% \usetikzlibrary{arrows.meta, calc, fit, tikzmark}
+\usetikzlibrary{%
+  positioning
+ ,patterns
+ ,arrows.meta
+ ,automata
+ ,calc
+ ,shapes
+ ,fit
+ ,tikzmark
+ ,fadings
+ ,decorations.pathreplacing
+ ,plotmarks
+% ,pgfplots.groupplots
+ ,decorations.markings
+}
+% \tikzset{shorten >=1pt,node distance=2cm,on grid,auto,initial text={},inner sep=2pt}
+\tikzstyle{aut}=[shorten >=1pt,node distance=2cm,on grid,auto,initial text={},inner sep=2pt]
+\tikzstyle{st}=[circle,draw=black,fill=black!10,inner sep=3pt]
+\tikzstyle{sst}=[rectangle,draw=none,fill=none,inner sep=3pt]
+\tikzstyle{final}=[accepting]
+
+
+
 

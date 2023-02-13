@@ -1,0 +1,78 @@
+\usetheme{metropolis}
+\usepackage{appendixnumberbeamer}
+
+% Base colors (from metropolis theme)
+\definecolor{metDarkBrown}{HTML}{604c38}
+\definecolor{metDarkTeal}{HTML}{23373b}
+\definecolor{metLightBrown}{HTML}{EB811B}
+\definecolor{metLightGreen}{HTML}{14B03D}
+
+ 
+
+\metroset{numbering=fraction,progressbar=frametitle}
+
+% \setbeamercolor*{structure}{fg=blue!80!black}
+\setbeamercolor*{structure}{fg=metLightGreen}
+
+% % \definecolor{MainColour}{rgb}{0., 0.25, 0.8}
+% \colorlet{MainColour}{blue!50!black}
+% \colorlet{BgColour}{blue!10}
+% \colorlet{BarColour}{blue!50!black}
+
+
+% %\usetheme{CambridgeUS}%{Copenhagen}%{Frankfurt}%{Singapore}%{CambridgeUS}
+% \usecolortheme[named=MainColour]{structure} 
+% \useoutertheme[subsection=false]{miniframes}
+% \useinnertheme{circles}
+% %\useinnertheme[shadow=false]{rounded}
+% \setbeamertemplate{blocks}[rounded][shadow=false]
+
+% \setbeamercovered{transparent} 
+% \setbeamertemplate{navigation symbols}{} %Remove navigation bar
+% \setbeamertemplate{footline}[frame number] % add page number
+% \setbeamercolor{postit}{fg=MainColour,bg=BgColour}
+% \setbeamercolor{structure}{bg=black!10}
+% %\setbeamercolor{palette primary}{use=structure,fg=red,bg=green}
+% %\setbeamercolor{palette secondary}{use=structure,fg=red!75!black,bg=green}
+% \setbeamercolor{palette tertiary}{use=structure,bg=BarColour,fg=white}
+% %\setbeamercolor{palette quaternary}{fg=black,bg=green}
+% %\setbeamercolor{normal text}{fg=black,bg=white}
+% %\setbeamercolor{block title alerted}{fg=red,bg=green}
+% %\setbeamercolor{block title example}{bg=black!10,fg=green}
+\setbeamercolor{block body}{bg=black!5}
+
+% \setbeamercolor{block title alerted}{bg=red!25}
+% \setbeamercolor{block body alerted}{bg=red!10}
+
+% \setbeamercolor{block title example}{bg={rgb:green,2;black,1;white,5}}
+\setbeamercolor{block body example}{bg={rgb:green,2;black,1;white,20}}
+\setbeamercolor{block body alerted}{bg={metLightBrown!25}}
+
+% \setbeamertemplate{itemize item}{\color{black!10}$\blacksquare$}
+\setbeamercolor{itemize item}{fg=metDarkTeal}
+\setbeamercolor{itemize subitem}{fg=metDarkTeal}
+
+\setbeamercolor{graybc}{fg=black,bg=black!10}
+\newcommand{\myblock}[1]{\begin{beamercolorbox}[dp=1ex,center,rounded=true]%
+  {graybc} {\large \textbf{#1}} \end{beamercolorbox}}%
+
+
+% Configuring the foot line
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.4\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertsection
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+% No configuration symbols
+\setbeamertemplate{navigation symbols}{}
+

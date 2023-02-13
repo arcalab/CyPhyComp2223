@@ -1,0 +1,771 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage{etex} % fixes new-dimension error
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+
+%----------------------------------------------------------------------------
+\usepackage{graphicx,amsmath}
+\usepackage{stmaryrd} % cf. interleave
+\usepackage{booktabs}
+\usepackage{amscd}
+\usepackage{multicol}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{alltt}
+\usepackage{proof}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usepackage[new]{old-arrows}
+\usepackage[all]{xy}
+\usepackage{pgfplots}
+\usepackage{textcomp}
+
+\input{macros/macros}
+%-------------- template --------------------------------------------------
+\input{macros/beamerconf}
+
+%------ using pstricks (rnode etc) ------------------------------------------
+% \usepackage{pstricks,pst-node,pst-text,pst-3d}
+% ------ using color ---------------------------------------------------------
+\definecolor{goldenrod}{rgb}{.80392,.60784,.11373}
+\definecolor{darkgoldenrod}{rgb}{.5451,.39608,.03137}
+\definecolor{brown}{rgb}{.15,.15,.15}
+\definecolor{darkolivegreen}{rgb}{.33333,.41961,.18431}
+\definecolor{darkgreen}{rgb}{0,0.6,0}
+% \newrgbcolor{goldenrod}{.80392 .60784 .11373}
+% \newrgbcolor{darkgoldenrod}{.5451 .39608 .03137}
+% \newrgbcolor{brown}{.15 .15 .15}
+% \newrgbcolor{darkolivegreen}{.33333 .41961 .18431}
+\def\gold#1{{\goldenrod #1}}
+\def\dgold#1{{\alert{#1}}}
+\def\dkb#1{{\blue #1}}
+\def\tdkb#1{\textbf{\darkblue #1}}
+\def\gre#1{{\darkolivegreen #1}}
+\def\gry#1{{\gray #1}}
+\def\rdb#1{{\red #1}}
+% ----------------------------------------------------------------------------
+
+% % context
+% \AtBeginSection[]
+% {
+%     \begin{frame}
+%         \frametitle{Table of Contents}
+%         \tableofcontents[currentsection]
+%     \end{frame}
+% }
+% \author[Renato Neves]{Renato Neves}
+% % logos of institutions
+% \titlegraphic{
+%   \begin{textblock*}{5cm}(6.7cm,7.45cm)
+%      \includegraphics[scale=0.06]{images/uminho.png}\hspace*{.85cm}~%
+%   \end{textblock*}
+%   \begin{textblock*}{5cm}(9.4cm,7.45cm)
+%     \includegraphics[scale=0.50]{images/haslab.pdf}
+%   \end{textblock*}
+% }
+% % No date
+% \date{}
+
+\begin{document}
+
+% \setLectureBasic{Cyber-Physical Computation}
+\setLecture{2}{Transition Systems}
+\frame[plain]{\titlepage}
+
+
+\section{What are Formal Methods?}
+
+
+\begin{slide}{What are formal methods?}
+  \centering
+
+  \begin{minipage}{0.7\textwidth}
+  \Large
+  \begin{block}{}
+    \centering
+    Formal methods are \structure{techniques} to
+    \\
+    model \alert{complex systems} using
+    \\
+    \alert{rigorous mathematical models}
+
+  \end{block}
+  \end{minipage}
+  \\[10mm]
+
+  \begin{minipage}{0.32\textwidth}
+  \begin{alertblock}{Specification}
+    Define part of the system using a modelling language
+  \end{alertblock}
+  \end{minipage}
+~~
+  \begin{minipage}{0.3\textwidth}
+  \begin{alertblock}{Verification}
+    Prove properties.\\Show correctness.\\Find bugs.
+  \end{alertblock}
+  \end{minipage}
+~~
+  \begin{minipage}{0.28\textwidth}
+  \begin{exampleblock}{Implementation}
+    Generate correct code.\\~\\
+  \end{exampleblock}
+  \end{minipage}
+
+\end{slide}
+
+\begin{frame}
+  \huge\centering
+  All formal models are \alert{wrong}
+  \pause
+  \\[5mm]
+  ... but some of them are \structure{usefull}!
+\end{frame}
+
+
+% \begin{slide}{Many success cases}
+%   \huge\centering
+
+%   Cryptographic protocols
+%   \\[5mm]
+%   Distributed systems do not get stuck
+%   \\[5mm]
+%   Safety in railway systems
+%   \\[5mm]
+%   Type systems
+%   \\[5mm]
+%   \faded{\emph{[Tests: Validation (not Verification)]}}
+
+% \end{slide}
+
+
+\begin{slide}{Syllabus}
+  \frsplitt{
+    \begin{itemize}
+      \alert{
+      \item CSS: a simple language for concurrency
+      \begin{itemize}
+        \item Syntax
+        \item Semantics
+        \item Equivalence
+      \end{itemize}
+      }
+      \item  {Timed Automata}
+      \begin{itemize}
+        \item Syntax
+        \item Semantics (composition, Zeno)
+        \item Equivalence
+        \item {UPPAAL tool}
+        \begin{itemize}
+           \item Specification
+           \item CTL and Verification
+         \end{itemize}
+      \end{itemize}
+    \end{itemize}
+  }{
+    \begin{itemize}
+      \item A simple C-like language
+      \begin{itemize}
+        \item Syntax
+        \item Semantics (operational)
+      \end{itemize}
+      \item {Hybrid-language}: adding differential equations
+      \begin{itemize}
+        \item Syntax
+        \item Semantics
+        \item {Lince tool}
+        \begin{itemize}
+          \item Specification
+          \item Analysis
+        \end{itemize}
+      \end{itemize}
+      \item {Monads}: semantics with computational effects
+        % \begin{itemize}
+        %   \item Modelling Cyber-physical behaviour with Monads
+        %   \item Hybrid Monad
+        %   \item Monad Combination
+        % \end{itemize}
+    \end{itemize}
+  }
+\end{slide}
+\section{Why transition systems?}
+
+\begin{frame}{A Sprinkle of Linguistics}
+  During the module we will encounter two linguistic concepts that every programmer
+  should know:
+  \begin{itemize}
+  \item \alert{syntax} - the rules used for determining whether a sentence
+    is valid (in a language) or not
+  \item \alert{semantics} - the meaning of valid sentences
+  \end{itemize}
+
+  \vfill
+  \begin{exampleblock}{\exercise Syntax}
+      The sentence/program $\mathtt{x := p\, ;q}$ is forbidden by
+      the syntactic rules of most programming languages
+    \end{exampleblock}
+  \begin{exampleblock}{\exercise Semantics}
+      The sentence/program $\mathtt{x := 1}$ has the meaning
+      ``writes \texttt{1} in the memory address corresponding to \texttt{x}''
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{The need for Semantics in Formal Analysis}
+
+  How can one prove that a program does what is supposed to do if its
+  semantics (i.e. its meaning) is not established \emph{a priori} ?
+
+  \begin{exampleblock}{\exercise}
+    What is the end result of running
+    $x:=2\ ; (x := x + 1 \tikzmark{z1}  \parallel  \tikzmark{z2} x := 0)$ ?
+  \end{exampleblock}
+
+  \begin{tikzpicture}[overlay,remember picture,
+       box/.style = {rounded corners},
+       pin edge={-Stealth,thick, red}]
+       \coordinate (z1) at ($({pic cs:z1})+(+0.5ex, 1.5ex)$);
+       \coordinate (z2) at ($({pic cs:z2})+(-0.5ex,-0.5ex)$);
+       \node[semitransparent, 
+             fit=(z1) (z2),
+             pin=below:\tiny{parallelism operator}]  {};
+   \end{tikzpicture}
+
+   \vfill
+   \underline{Widely used} programming languages \alert{still} lack a formal
+   semantics
+\end{frame}
+
+
+\section{Defining Transition System with Functors}
+
+\begin{frame}{Preliminaries pt. I}
+
+  Recalling previous modules \dots
+
+  \vfill
+  \begin{definition}[Functor]
+    A functor $F$ sends a set $X$ into a new set $FX$ and a function
+    $f : X \to Y$ into a new function $F f : F X \to F Y$ such that
+    \[
+      F (\id) = \id  \hspace{1cm} F(g \comp f) = F g \comp F f
+    \]
+  \end{definition}
+
+  Fix a set $A$. The following two functors then naturally arise
+  \begin{itemize}
+  \item product - $X \mapsto A \times X, \hspace{0.2cm} f \mapsto id \times f$
+  \item exponential - $X \mapsto X^A, \hspace{0.2cm} f \mapsto (g \mapsto f \comp g)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Preliminaries pt. II - the List and Powerset functors}
+  The list functor - $X \mapsto X^\ast, \hspace{0.2cm} f \mapsto \tikzmark{x1}
+  \prog{map}\ f \tikzmark{x2}$
+
+  \vspace{1cm}
+  The powerset functor - almost like the list functor; the difference
+  is that we do not look at the order in which elements appear and
+  how many times they repeat. Formally,
+  \[
+    X \mapsto \{ A \mid A \subseteq X \}, \qquad f \mapsto
+    (A \mapsto \{ f(a) \mid a \in A \})
+  \]
+
+  \begin{exampleblock}{\exercise Powerset on Booleans}
+    $\mathtt{Bool} \mapsto \{ \emptyset, \{ \top \}, \{ \bot \}, \{ \top, \bot \} \}$
+  \end{exampleblock}
+  
+  \begin{tikzpicture}[overlay,remember picture,
+       box/.style = {rounded corners},
+       pin edge={-Stealth,thick, red}]
+       \coordinate (x1) at ($({pic cs:x1})+(+0.5ex, 1.5ex)$);
+       \coordinate (x2) at ($({pic cs:x2})+(-0.5ex,-0.5ex)$);
+       \node[semitransparent, 
+             fit=(x1) (x2),
+             pin=below:\tiny{applies $f$ to every element of a given list}]  {};
+   \end{tikzpicture}
+
+\end{frame}
+
+
+\begin{frame}{A (Generalised) Notion of a Transition System}
+  \begin{definition}[Transition system]
+    Let $F$ be a functor. An $F$-transition system is 
+    a map $X \to F X$
+  \end{definition}
+
+  \vfill
+  Some famous examples of $F$-transition systems
+  \begin{itemize}
+  \item Moore machine - $X \to \Act \times X$
+  \item Deterministic automata - $X \to \mathtt{Bool} \times X^{\Act}$
+  \item Non-deterministic automata - $X \to \mathtt{Bool} \times \tikzmark{a1} \Pow(X)^{\Act} \tikzmark{a2}$
+  \item Markov chain - $X \to \tikzmark{b1} \Dist(X) \tikzmark{b2}$
+  \end{itemize}
+
+  \begin{tikzpicture}[overlay,remember picture,
+     box/.style = {rounded corners},
+     pin edge={-Stealth,thick, red}]
+     \coordinate (a1) at ($({pic cs:a1})+(+0.5ex, 1.5ex)$);
+     \coordinate (a2) at ($({pic cs:a2})+(-0.5ex,-0.5ex)$);
+     \node[semitransparent, 
+           fit=(a1) (a2),
+           pin=below:\tiny{Powerset functor}]  {};
+  \end{tikzpicture}
+  \begin{tikzpicture}[overlay,remember picture,
+     box/.style = {rounded corners},
+     pin edge={-Stealth,thick, red}]
+     \coordinate (b1) at ($({pic cs:b1})+(+0.5ex, 1.5ex)$);
+     \coordinate (b2) at ($({pic cs:b2})+(-0.5ex,-0.5ex)$);
+     \node[semitransparent, 
+           fit=(b1) (b2),
+           pin=below:\tiny{Distribution functor}]  {};
+  \end{tikzpicture}
+
+\end{frame}
+
+\begin{frame}{Our First encounter with Coalgebra}
+
+  Indeed the idea of working at the level of
+
+  \begin{center}
+    \alert{Functors as Transition Types}
+  \end{center}
+
+  is a very fruitful one; and which we only barely
+  grasped (yet) ---
+
+  in essence, it provides a \alert{universal theory} of transition
+  systems that can be instantiated to most kinds of transition system
+  we will encounter in our life
+\end{frame}
+
+
+
+
+
+\section{Process algebra}
+
+%-------------------------------------------------------------------------------
+\begin{slide}{Process algebras}
+\small
+
+\begin{block}{Sequential CCS - Syntax}
+\begin{equation*}
+% \mathcal{P} ~\ni~ P,Q\; ::=\; K ~~|~~ \alpha.P ~~|~~ \sum_{i\in I} P_i
+%         ~~|~~ \crn P f \faded{~~|~~ P|Q ~~|~~ P\backslash L}
+\mathcal{P} ~\ni~ P,Q\; ::=\; K ~~|~~ \alpha.P ~~|~~ P + Q ~~|~~ \cnil
+        ~~|~~ \crn P f  ~~|~~ P\backslash L \faded{~~|~~ P|Q}
+\end{equation*}
+%
+where
+\\- $\alpha \in \Act %\faded{\cup \overline\Act \cup \set{\tau}}
+    \cup \set{\tau}$~ is an \structure{action}
+\\- $K$ s a collection of \structure{process} names or process constants
+% \\- $I$ is an indexing set
+\\- $L \subseteq \Act %\faded{\cup \overline{\Act}}
+    $ is a set of \structure{labels}
+\\- $f$ is a function that \structure{renames} actions s.t. $f(\tau) = \tau$ % and $f(\overline{a}) = \overline{f(a)}$
+\\- \alert{notation:}
+% \\~~~~~$\cnil = \sum_{i\in\emptyset}P_i$
+% \\~~~~~$P_1+P_2 = \sum_{i\in\set{1,2}}P_i$
+\\~~~~~$[f] = [a_1\mapsto b_1,\ldots,a_n \mapsto b_n]$
+\end{block}
+\end{slide}
+
+%-------------------------------------------------------------------------------
+
+\begin{slide}{Process algebras}
+\small
+
+\begin{block}{Syntax}
+\begin{equation*}
+% \mathcal{P} ~\ni~ P,Q\; ::=\; K ~~|~~ \alpha.P ~~|~~ \sum_{i\in I} P_i
+%         ~~|~~ \crn P f \faded{~~|~~ P|Q ~~|~~ P\backslash L}
+\mathcal{P} ~\ni~ P,Q\; ::=\; K ~~|~~ \alpha.P ~~|~~ P + Q ~~|~~ \cnil
+        ~~|~~ \crn P f  ~~|~~ P\backslash L \faded{~~|~~ P|Q}
+\end{equation*}
+\end{block}
+
+%\setcounter{equation}{0}
+\begin{exampleblock}{\exercise Which are NOT syntactically correct? Why?}
+\begin{columns}
+  \column{0.38\textwidth}
+  \begin{align}
+    & a.b.A+B\\&
+    (a.\cnil + b.A) \backslash \set{a,b,c}\\&
+    (a.\cnil + b.A) \backslash \set{a,\tau}\\& % no
+    a.B+[b\mapsto a]\\& % no
+    \tau.\tau.B + \cnil
+  \end{align}
+
+  \column{0.45\textwidth}
+  \begin{align} &
+    a.(a + b).A\\&
+    (a.B + b.B)[a\mapsto a,\tau\mapsto b]\\&
+    (a.B + \tau.B)[b\mapsto a,a\mapsto a]\\& % no
+    % (a.b.A + \ainv a.\cnil)|B\\&
+    (a.b.A + b.\cnil).B\\&
+    (a.b.A + b.\cnil)+B
+    % \\&
+    % (\cnil | \cnil) + \cnil
+  \end{align}
+\end{columns}
+\end{exampleblock}
+
+\end{slide}
+
+%-------------------------------------------------------------------------------
+
+\exerciseBack
+\begin{slide}{CCS semantics - building a transition system}
+\small 
+Every $P$ yields a transition system $X \to {\alert{???}}$ with transitions prescribed by the rules below.
+
+\vspace*{-1mm}
+\centering
+\newcommand{\msep}{~~~~~~}
+
+\typerule{act}{\shrk}{\alpha.P \trans\alpha P}
+\msep
+\typerule{sum-1}{P_1 \trans\alpha P'_1}{P_1 + P_2 \trans\alpha P'_1} %$\faded{j\in I}$
+\msep
+\typerule{sum-2}{P_2 \trans\alpha P'_2}{P_1 + P_2 \trans\alpha P'_2} %$\faded{j\in I}$
+\\[3mm]
+\typerule{res}{P\trans\alpha P'}{\crt P L\trans\alpha \crt{P'}L}~${\alpha%,\ainv{\alpha}
+                                                                  \notin L}$
+\msep
+\typerule{rel}{P\trans\alpha P'}{\crn P f\trans{f(\alpha)} \crn{P'} f}
+% \\[3mm]
+% \typerule{com1}{P\trans\alpha P'}{P|Q\trans\alpha P'|Q}
+% \msep
+% \typerule{com2}{Q\trans\alpha Q'}{P|Q\trans\alpha P|Q'}
+% \msep
+% \typerule{com3}{P\trans a P' \quad Q\trans{\ainv{a}} Q'}{P|Q\trans\tau P'|Q'}
+\\[6mm]
+
+\only<1>{
+  \begin{itemize}
+    \item \structure{Initial states:} the process being translated
+    \item \structure{Final states:} all states are final
+    \item \alert{Language:} possible sequence of actions of a process
+  \end{itemize}
+}
+\pause
+
+\begin{exampleblock}{\exercise Build a derivation tree to prove the transitions below}
+  \vspace*{-2mm}
+  \begin{enumerate}
+    \item $(a.A + b.B) ~\trans{b}~ B$
+    \item $(a.b.A + (b.a.B + c.a.C)) ~\trans{b}~ a.B$
+    \item $((a.B + b.A)[a \mapsto c])\backslash\{a,b\} ~\trans{c}~ (B[a\mapsto c])\backslash\{a,b\}$
+  \end{enumerate}
+\end{exampleblock}
+
+\end{slide}
+
+\begin{slide}{Exercise}
+  \begin{exampleblock}{\exercise Draw the automata}
+  % \vspace*{-4mm}
+  \begin{align*}
+    CM &= \mathsf{coin.coffee}.CM
+    \\
+    CS &= \mathsf{pub.(coin.coffee.CS + coin.tea.CS)}
+    % CM &= \mathsf{coin.\ainv{coffee}}.CM
+    % \\
+    % CS &= \mathsf{\ainv{pub}.\ainv{coin}.coffee}.CS
+    % \\
+    % SmUni &= \crt{(CM|CS)}{\mathsf{\set{coin,coffee}}}
+  \end{align*}
+\end{exampleblock}
+
+\doExercise{What is the language of the process $A$?}{
+\centering
+  \vspace*{-5mm}
+  \begin{align*}
+    A &= \mathsf{goLeft.A + goRight.B}
+    \\
+    B &= \mathsf{rest.\cnil}
+  \end{align*}
+}
+\end{slide}
+
+
+\begin{slide}{Exercise}
+  \centering
+
+  \includegraphics[width=1.0\textwidth]{images/coffee-flow.png}
+
+  \doExercise{Write the process of the flowchart above}{
+        $P ~~=~ \mf{powerOn} . Q$\\
+        $Q ~~=~ \mf{selMocha}.\mf{addChocolate}.Mk + \mf{selLatte}.Mk + \ldots $\\
+        $Mk ~=~ \mf{addMilk}\ldots$  
+      ~\\[0.35\textheight]
+  }
+
+\end{slide}
+
+
+
+% ----------------------------------------
+
+\section{Concurrent Process algebra}
+
+
+\begin{slide}{Overview}
+
+\begin{block}{Recall}
+\begin{enumerate}
+  \item Non-deterministic Finite Automata ($X \to \faded{\mathtt{Bool}} \times \mathtt{P}(X)^{\Act}$):
+  \wrap{\small\begin{tikzpicture}[aut]
+  \node[st,initial]  (q1) {$q_1$};
+  \node[st,final] (q2) [right of=q1]  {$q_2$};
+  \path[->] (q1) edge node {a} (q2) (q2) edge[loop right] node {b} ();
+\end{tikzpicture}}
+  \item (Sequential) Process algebra:
+    $P = a.Q ~~~~ Q=b.Q$
+
+  \item Meaning of \structure{(2)} using \structure{(1)}
+\end{enumerate}  
+\end{block}
+
+\begin{block}{Still missing}
+\begin{itemize}
+  \item \alert{\textbf{Interaction}} between processes
+  \item \emph{Interaction \alert{diagrams}} vs. \emph{interacting \alert{processes}}
+  \item Enrich \structure{(2)} and \structure{(3)}
+\end{itemize}
+\end{block}
+
+\end{slide}
+
+%-------------------------------------------------------------------------------
+\begin{slide}{Process algebras}
+\small
+
+\begin{block}{CCS - \alert{Updated} Syntax}
+\begin{equation*}
+% \mathcal{P} ~\ni~ P,Q\; ::=\; K ~~|~~ \alpha.P ~~|~~ \sum_{i\in I} P_i
+%         ~~|~~ \crn P f \transp{~~|~~ P|Q ~~|~~ P\backslash L}
+\mathcal{P} ~\ni~ P,Q\; ::=\; K ~~|~~ \alpha.P ~~|~~ P + Q ~~|~~ \cnil
+        ~~|~~ \crn P f  ~~|~~ P\backslash L ~~|~~ \alert{P|Q}
+\end{equation*}
+%
+where
+\\- $\alpha \in \Act \alert{\cup \overline\Act}
+    \cup \set{\tau}$~ is an action
+\\- $K$ s a collection of process names or process constants
+\\- $L \subseteq \Act %\transp{\cup \overline{\Act}}
+    $ is a set of labels
+\\- $f$ is a function that renames actions s.t. $f(\tau) = \tau$  \alert{and $f(\overline{a}) = \overline{f(a)}$}
+\\- notation:
+% \\~~~~~$\cnil = \sum_{i\in\emptyset}P_i$
+% \\~~~~~$P_1+P_2 = \sum_{i\in\set{1,2}}P_i$
+\\~~~~~$[f] = [a_1\mapsto b_1,\ldots,a_n \mapsto b_n]$~~~~~where \alert{$a_i,b_i \in N \cup \set{\tau}$}
+\end{block}
+\end{slide}
+
+%-------------------------------------------------------------------------------
+
+\begin{slide}{Process algebras}
+\small
+
+\begin{block}{Syntax}
+\begin{equation*}
+% \mathcal{P} ~\ni~ P,Q\; ::=\; K ~~|~~ \alpha.P ~~|~~ \sum_{i\in I} P_i
+%         ~~|~~ \crn P f \transp{~~|~~ P|Q ~~|~~ P\backslash L}
+\mathcal{P} ~\ni~ P,Q\; ::=\; K ~~|~~ \alpha.P ~~|~~ P + Q ~~|~~ \cnil
+        ~~|~~ \crn P f  ~~|~~ P\backslash L ~~|~~  \alert{P|Q}
+\end{equation*}
+\end{block}
+
+%\setcounter{equation}{0}
+\begin{exampleblock}{\exercise Which are syntactically correct?}
+\begin{columns}
+  \column{0.38\textwidth}
+  \begin{align}
+    & a.\ainv b.A+B\\&
+    (a.\cnil + \ainv a.A) \backslash \set{\ainv{a},b}\\&
+    (a.\cnil + \ainv a.A) \backslash \set{a,\tau}\\& % no
+    (a.\cnil + \ainv{\tau}.A) \backslash \set{a}\\& % no
+    % a.B+[b\mapsto a]\\& % no
+    \tau.\tau.B + \ainv a.\cnil %\\&
+    % a.(a + b).A
+    \\&
+    (\cnil | \cnil) + \cnil
+  \end{align}
+
+  \column{0.45\textwidth}
+  \begin{align} &
+    (a.B + b.B)[a\mapsto a,\tau\mapsto b]\\&
+    (a.B + \tau.B)[b\mapsto a,b\mapsto a]\\& % no
+    (a.B + b.B)[a\mapsto b,b\mapsto \ainv a]\\& % no
+    (a.b.A + \ainv a.\cnil)|B\\&
+    (a.b.A + \ainv a.\cnil).B\\&
+    (a.b.A + \ainv a.\cnil)+B
+  \end{align}
+\end{columns}
+\end{exampleblock}
+
+\end{slide}
+
+%-------------------------------------------------------------------------------
+
+\begin{slide}{CCS semantics - building an NFA}
+\small 
+\centering
+\newcommand{\msep}{~~~~~~}
+\vspace*{-2mm}
+
+\typerule{act}{\shrk}{\alpha.P \trans\alpha P}
+\msep
+\typerule{sum-1}{P_1 \trans\alpha P'_1}{P_1 + P_2 \trans\alpha P'_1} %$\transp{j\in I}$
+\msep
+\typerule{sum-2}{P_2 \trans\alpha P'_2}{P_1 + P_2 \trans\alpha P'_2} %$\transp{j\in I}$
+\\[2mm]
+\typerule{res}{P\trans\alpha P'}{\crt P L\trans\alpha \crt{P'}L}~$\transp{\alpha,\ainv{\alpha}
+                                                                  \notin L}$
+\msep
+\typerule{rel}{P\trans\alpha P'}{\crn P f\trans{f(\alpha)} \crn{P'} f}
+\\[2mm]
+\alert{
+\typerule{com1}{P\trans\alpha P'}{P|Q\trans\alpha P'|Q}
+\msep
+\typerule{com2}{Q\trans\alpha Q'}{P|Q\trans\alpha P|Q'}
+\msep
+\typerule{com3}{P\trans a P' \quad Q\trans{\ainv{a}} Q'}{P|Q\trans\tau P'|Q'}
+}
+\\[2mm]
+\pause
+
+\begin{exampleblock}{\exercise Draw the transition systems}
+  \exerciseBack
+  \vspace*{-5mm}
+  \begin{align*}
+    % CM &= \mathsf{coin.coffee}.CM
+    % \\
+    % CS &= \mathsf{pub.(coin.coffee.CS + coin.tea.CS)}
+    CM &= \mathsf{coin.\ainv{coffee}}.CM
+    \\
+    CS &= \mathsf{pub.\ainv{coin}.coffee}.CS
+    \\
+    SmUni &= \crt{(CM|CS)}{\mathsf{\set{coin,coffee}}}
+  \end{align*}
+  \vspace*{-7mm}
+\end{exampleblock}
+\end{slide}
+\exerciseAdd
+
+
+
+\begin{slide}{Exercises}
+  \doExercise{Let $A=b.a.B$. Show that:}{
+    \vspace*{-8mm}
+    \begin{enumerate}
+      \item $(A ~|~ \overline{b}.\cnil)\backslash \{b\}~\trans\tau~ (a.B ~|~ \cnil)\backslash\{b\}$
+      \item $(A ~|~ b.a.B) + ((b.A)[b\mapsto a]) ~\trans{a}~ A[b \mapsto a]$
+    \end{enumerate}
+  }  
+
+  \doExercise{Draw the NFAs $A$ and $D$}{
+    \vspace*{-8mm}
+
+    \begin{columns}
+    \col[0.45]{      
+    \begin{align*}
+      A &= x.B+x.x.C\\
+      B &= x.x.A+y.C\\
+      C &= x.A      
+    \end{align*}
+    }
+    \col[0.45]{      
+    \begin{align*}
+      D &= x.x.x.D + x.E\\
+      E &= x.F+y.F\\
+      F &= x.A      
+    \end{align*}
+    }
+    \end{columns}
+  }  
+
+\end{slide}
+
+
+\section{Observational Equivalence}
+
+\begin{slide}{Overview}
+
+\begin{block}{Recall}
+\begin{enumerate}
+  \item F-transition systems, e.g., Non-deterministic Finite Automata:
+  \wrap{\small\begin{tikzpicture}[aut]
+  \node[st,initial]  (q1) {$q_1$};
+  \node[st,final] (q2) [right of=q1]  {$q_2$};
+  \path[->] (q1) edge node {a} (q2) (q2) edge[loop right] node {b} ();
+\end{tikzpicture}}
+  \item Process algebra:
+    $P = a.Q ~~~~ Q=b.Q ~~~~ P|Q$
+
+  \item Interaction between processes
+  
+  \item Meaning of CCS using transition systems
+
+  % \item Equivalence relations ((bi)simulations)
+\end{enumerate}  
+\end{block}
+
+\begin{block}{Still missing}
+\begin{itemize}
+  \item When is a process $P$ \alert{equivalent} to a process $Q$?
+  \item When can a process $P$ be \alert{safely replaced} by a process $Q$?
+  % \item When can a sequence of interactions be \alert{safely implemented} as interacting components?
+\end{itemize}
+\end{block}
+\end{slide}
+
+
+\begin{frame}{Observational Equivalence Informally}
+
+  Two programs are \structure{observationally equivalent} if it is impossible to \alert{observe any
+  difference} in their \alert{behaviour}
+
+  
+  \vfill
+  Here behaviour is described in terms of transition systems
+
+  \dots\ and therefore behaviour/equivalence needs to be pinned
+  down to them
+\end{frame}
+
+\begin{frame}{$F$-Transition Systems and Observational Behaviour}
+  Every functor $F$ induces a notion of observational behaviour
+
+  \begin{example}[Moore automata]
+    Every automaton $X \to A \times X$ induces a map
+    $\sem{-} : X \to \tikzmark{om1} A^\omega \tikzmark{om2}$
+  \end{example}
+
+  \begin{example}[Deterministic automata]
+    Every automaton $X \to \prog{Bool} \times X^L$ induces 
+    $\sem{ - } : X \times L^\ast \to \prog{Bool}$
+  \end{example}
+
+  \vfill
+  Intuitively $F$ provides a black-box perspective to the transition system \dots
+
+  states are not \alert{directly observable}; only their \alert{interaction} with the
+  environment is
+  
+  \begin{tikzpicture}[overlay,remember picture,
+     box/.style = {rounded corners},
+     pin edge={-Stealth,thick, red}]
+     \coordinate (om1) at ($({pic cs:om1})+(+0.5ex, 1.5ex)$);
+     \coordinate (om2) at ($({pic cs:om2})+(-0.5ex,-0.5ex)$);
+     \node[semitransparent, 
+           fit=(om1) (om2),
+           pin=below:\tiny{Infinite lists over $A$}]  {};
+  \end{tikzpicture}
+  
+\end{frame}
+
+
+\end{document}
