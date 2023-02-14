@@ -211,6 +211,8 @@
 \newcommand{\set}[1]{\left\{ #1 \right\}} % {a,b,...z}
 \newcommand{\mi}[1]{\ensuremath{\mathit{#1}}\xspace}
 \newcommand{\mf}[1]{\ensuremath{\mathsf{#1}}\xspace}
+% \newcommand{\gold}[1]{\textcolor{darkgoldenrod}{#1}\xspace}
+% from LSB
 \def\Act{N}
 \def\cnil{\mathbf{0}}
 \def\cpf#1#2{#1 . #2}                           % a.P
@@ -221,6 +223,13 @@
 \def\crt#1#2{#1 \backslash #2}       % P \ A
 %\def\crn#1#2{\{#2\}\, #1}                  % P[f]
 \def\ainv#1{\overline{#1}}
+\def\rtran#1{\stackrel{#1}{\longrightarrow}}
+% \def\pair#1{\const{#1}}
+\def\pair#1{\langle #1 \rangle}
+\def\imp{\mathbin{\Rightarrow}}
+\def\rra{\longrightarrow}
+\def\rcb#1#2#3#4{\def\nothing{}\def\range{#3}\mathopen{\langle}#1 \ #2 \ \ifx\range\nothing::\else: \ #3 :\fi \ #4\mathclose{\rangle}}
+\def\aconv#1{#1^{\circ}} 
 
 
 \def\crn#1#2{\mathbin{#1[#2]}}                  % P[f]
@@ -252,12 +261,17 @@
 \newcommand{\styperule}[3][]{\ensuremath{\begin{array}[#1]{c} #2 \\[0.5mm]\hline\raisebox{-4pt}{\ensuremath{#3}}\end{array}}}
 \newcommand{\shrk}{\vspace{-3mm}}
 
+\def\caixa#1{\medskip
+  \begin{center}
+  \fbox{\begin{minipage}{0.9\textwidth}\protect{#1}\end{minipage}}
+  \end{center}}
 
 %%%%% Tikz
 % \usetikzlibrary{arrows.meta, calc, fit, tikzmark}
 \usetikzlibrary{%
   positioning
  ,patterns
+ ,arrows
  ,arrows.meta
  ,automata
  ,calc
@@ -275,6 +289,8 @@
 \tikzstyle{st}=[circle,draw=black,fill=black!10,inner sep=3pt]
 \tikzstyle{sst}=[rectangle,draw=none,fill=none,inner sep=3pt]
 \tikzstyle{final}=[accepting]
+
+
 
 
 

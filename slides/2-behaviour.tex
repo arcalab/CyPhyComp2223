@@ -36,13 +36,15 @@
 % \newrgbcolor{darkgoldenrod}{.5451 .39608 .03137}
 % \newrgbcolor{brown}{.15 .15 .15}
 % \newrgbcolor{darkolivegreen}{.33333 .41961 .18431}
-\def\gold#1{{\goldenrod #1}}
+% \def\gold#1{{\goldenrod #1}}
+\newcommand{\gold}[1]{\textcolor{darkgoldenrod}{#1}\xspace}
 \def\dgold#1{{\alert{#1}}}
 \def\dkb#1{{\blue #1}}
 \def\tdkb#1{\textbf{\darkblue #1}}
 \def\gre#1{{\darkolivegreen #1}}
 \def\gry#1{{\gray #1}}
-\def\rdb#1{{\red #1}}
+% \def\rdb#1{{\red #1}}
+\def\rdb#1{\textcolor{red}{#1}}
 % ----------------------------------------------------------------------------
 
 % % context
@@ -531,7 +533,7 @@ Every $P$ yields a transition system $X \to {\alert{???}}$ with transitions pres
 \begin{block}{Still missing}
 \begin{itemize}
   \item \alert{\textbf{Interaction}} between processes
-  \item \emph{Interaction \alert{diagrams}} vs. \emph{interacting \alert{processes}}
+  % \item \emph{Interaction \alert{diagrams}} vs. \emph{interacting \alert{processes}}
   \item Enrich \structure{(2)} and \structure{(3)}
 \end{itemize}
 \end{block}
@@ -736,36 +738,432 @@ where
   down to them
 \end{frame}
 
-\begin{frame}{$F$-Transition Systems and Observational Behaviour}
-  Every functor $F$ induces a notion of observational behaviour
+\section{EQ1 -- Language equivalence}
 
-  \begin{example}[Moore automata]
-    Every automaton $X \to A \times X$ induces a map
-    $\sem{-} : X \to \tikzmark{om1} A^\omega \tikzmark{om2}$
-  \end{example}
+%----------------------------------------------------------------------------------
+\begin{slide}{Language  equivalence}
+\small
 
-  \begin{example}[Deterministic automata]
-    Every automaton $X \to \prog{Bool} \times X^L$ induces 
-    $\sem{ - } : X \times L^\ast \to \prog{Bool}$
-  \end{example}
+\begin{block}{Definition}
+Two automata $A, B$ are \alert{language equivalent} iff  $ L_A =  L_B$\\
+(i.e. if they can perform the same finite sequences of transitions)
+\end{block}
+~\\
 
-  \vfill
-  Intuitively $F$ provides a black-box perspective to the transition system \dots
+\begin{example}
+  \centering
+  % Requires \usepackage{graphicx}
+  \includegraphics[width=9cm]{./images/alarm3.pdf}
+\end{example}
 
-  states are not \alert{directly observable}; only their \alert{interaction} with the
-  environment is
-  
-  \begin{tikzpicture}[overlay,remember picture,
-     box/.style = {rounded corners},
-     pin edge={-Stealth,thick, red}]
-     \coordinate (om1) at ($({pic cs:om1})+(+0.5ex, 1.5ex)$);
-     \coordinate (om2) at ($({pic cs:om2})+(-0.5ex,-0.5ex)$);
-     \node[semitransparent, 
-           fit=(om1) (om2),
-           pin=below:\tiny{Infinite lists over $A$}]  {};
-  \end{tikzpicture}
-  
+
+\alert{Language equivalence} applies  when one can neither interact with a system, nor distinguish a slow system from one that has come to a stand still.
+\end{slide}
+
+
+% \begin{slide}{Exercise}
+%   \centering
+%   \doExercise{Consider the system}{
+%   \centering
+%   \begin{tikzpicture}
+%       \node(p){$p$}; \node[right=of p](p1){$p_1$}; \node[right=of p1](p2){$p_2$};
+%       \draw[->] (p)edge[bend right] node[below]{a} (p1)
+%                 (p1)edge[bend right] node[above]{b}(p)
+%                 (p2)edge node[above]{d} (p1)edge[loop right] node[right]{c}(p1) ;
+%   \end{tikzpicture}
+%   \begin{enumerate}
+%     \item Formalise the system as a tuple $(S,Act,\to)$
+%     \item List 4 different traces from state (p2).
+%   \end{enumerate}
+%   }
+% \end{slide}
+
+
+\begin{slide}{Exercise}
+  \centering
+  \doExercise{Find pairs of automata with the same language}{
+    \centering 
+    \wrap{\begin{tikzpicture}[aut]
+      \node[st,initial above,final]  (s_0) {$A_0$};
+      \node[st] (s_1) [right of=s_0] {$A_1$};
+      \path[->]
+        (s_0) edge  node {a}  (s_1)
+        (s_0) edge[loop left] node {a}  ()
+        (s_1) edge[loop right] node {b}  (s_0);
+    \end{tikzpicture}}
+    ~~~~~~~~~~
+    \wrap{\begin{tikzpicture}[aut]
+      \node[st,initial above,final]  (s_0) {$B_0$};
+      \node[st,final] (s_1) [right of=s_0] {$B_1$};
+      \path[->]
+        (s_0) edge  node {a}  (s_1)
+        (s_0) edge[loop left] node {a}  ()
+        (s_1) edge[loop right] node {a}  (s_0);
+    \end{tikzpicture}}
+    ~~~~~~~~~
+    \wrap{\begin{tikzpicture}[aut]
+      \node[st,initial above]  (s_0) {$C_0$};
+      \node[st,final] (s_1) [right of=s_0] {$C_1$};
+      \path[->]
+        (s_0) edge  node {a}  (s_1)
+        (s_0) edge[loop left] node {a}  ()
+        (s_1) edge[loop right] node {b}  (s_0);
+    \end{tikzpicture}}
+    ~~~~~~~~~
+    \wrap{\begin{tikzpicture}[aut]
+      \node[st,initial above]  (s_0) {$D_0$};
+      \node[st,final] (s_1) [right of=s_0] {$D_1$};
+      \path[->]
+        (s_0) edge  node {a}  (s_1)
+        (s_0) edge[loop left] node {a}  ()
+        (s_1) edge[loop right] node {a}  (s_0);
+    \end{tikzpicture}}
+    ~~~~~~~~~
+    \wrap{\begin{tikzpicture}[aut]
+      \node[st,initial above]  (s_0) {$E_0$};
+      \node[st,final] (s_1) [right of=s_0] {$E_1$};
+      \path[->]
+        (s_0) edge[bend left]  node {a}  (s_1)
+        (s_1) edge[bend left]  node {a}  (s_0)
+        (s_1) edge[loop right] node {a}  (s_0);
+    \end{tikzpicture}}
+
+  }
+\end{slide}
+
+\begin{slide}{Exercise}
+  \doExercise{Check if the processes are language equivalent}{
+    \begin{align*}
+      P &= coin.(\ainv{coffee}.P + \ainv{tea}.P)
+      &
+      Q &= coin.\ainv{coffee}.Q + coin.\ainv{tea}.Q
+    \end{align*}
+  }
+
+\end{slide}
+
+
+\section{EQ2 -- Similarity}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Simulation}
+\begin{flushright}
+the quest for a \alert{behavioural equality}:\\
+able to identify states that cannot be distinguished by any \alert{realistic} form of  observation
+\end{flushright}
+~\\
+
+\small
+\begin{block}{Simulation}
+% \caixa
+{A state $q$ \alert{simulates} another state $p$
+\alert{if}\\
+every transition from $q$ is corresponded by a transition from $p$
+\alert{and}\\
+this capacity is kept along the whole life of the system to which state space $q$ belongs to.}
+\end{block}
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Simulation of NFA ($X \to \mathtt{P}(X)^{\Act}$)}
+\small
+
+\begin{block}{Definition}
+% Given  $\pair{S_1, \Act, \rra_1}$  and $\pair{S_2, \Act, \rra_2}$
+%  over $\Act$ \faded{(ignoring initial and final states)}
+Given NFA $A_1$ and $A_2$ over \Act\ with states $S_1$ and $S_2$ respectively,
+a relation \structure{$R \subseteq S_1 \times S_2$} is a \structure{simulation} iff,
+for all $\pair{p,q} \in \structure{R}$ and $a \in \Act$,
+
+\begin{align*}
+%\text{\gold{(1)}}\; \;  & p \downarrow_1 \;  \imp\; q \downarrow_2\\ &\\
+\text{\alert{(1)}}\; \;  & p \rtran{a}_1 p'\;  \imp\; \rcb{\exists}{q'}{q' \in S_2}{q \rtran{a}_2 q'\, \land\, \pair{p',q'} \in \structure{R}}   
+\end{align*}
+\vspace{0mm}
+
+\begin{equation*}
+\xymatrix{
+p \ar[d]^-{a} & \hspace{-1.5cm} \structure{R}  & \hspace{-2.7cm} q 
+  & \!\! \text{\raisebox{-10mm}{\Huge $\imp$}} \! \! &  &  &  q \ar[d]^-{a} \\
+p'           &   &           &                                   & p'\hspace{-2.7cm} &  \structure{R} \hspace{-1.5cm} &  q'
+}
+\end{equation*}
+
+\end{block}
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Example}
+
+\begin{exampleblock}{\exercise Find simulations}
+\begin{equation*}
+\xymatrix{
+& q_1  \ar[r]^{d} & q_2 &       &        &                              p_2\\
+q_0 \ar[ru]^{a} \ar[rd]_{a} &  & & p_0 \ar[r]^{a} & p_1 \ar[ru]^{d} \ar[rd]_{e} & \\
+& q_4  \ar[r]_{e} & q_3 &       &        &                              p_3\\
+}
+\end{equation*}
+\end{exampleblock}
+
+\vspace{0.2cm}
+\visible<2->{\exerciseBack\begin{equation*}
+q_0 \lesssim p_0 \text{\hspace{0.5cm} cf. \hspace{0.3cm}} 
+\set{\pair{q_0,p_0}, \pair{q_1,p_1},\pair{q_4,p_1},\alert{\ldots}} %\pair{q_2,p_2},\pair{q_3,p_3}}
+\end{equation*}}
+\end{slide}
+
+\exerciseAdd
+
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Similarity}
+\small
+
+\begin{block}{Definition}
+\centering
+\[p \lesssim q\; \equiv\; \rcb{\exists}{R}{}{R\; \text{is a simulation and}\; \pair{p,q} \in R} 
+\]
+\emph{We say \alert{$p$ is simulated by $q$}.}
+\end{block}
+
+% \begin{block}{Automata simulation}
+%   \[\pair{S_1,\set{s_1},\dda_1,\rra_1} \lesssim \pair{S_2,\set{s_2},\dda_2,\rra_2}\; \equiv\; s_1 \lesssim s_2 
+% \]
+% \end{block}
+
+\begin{block}{Lemma}
+The similarity relation is a preorder\\
+\faded{(ie, reflexive and transitive)}
+\end{block}
+\end{slide}
+
+
+
+%-------------------------
+
+\section{EQ3 -- Bisimilarity}
+%----------------------------------------------------------------------------------
+\begin{slide}{Bisimulation}
+\small
+
+\begin{block}{Definition}
+% Given  $\pair{S_1, \Act,  \rra_1}$  and $\pair{S_2, \Act, \rra_2}$ over $\Act$,
+Given NFA $A_1$ and $A_2$ over \Act\ with states $S_1$ and $S_2$ respectively,
+relation $R \subseteq S_1 \times S_2$ is a \structure{bisimulation} iff both $R$ and its converse $\aconv{R}$
+are simulations.
+
+I.e.,
+whenever $\pair{p,q} \in R$ and $a \in \Act$,
+
+\begin{align*}
+%\text{\gold{(1)}}\; \;  &  p \downarrow_1 \;  \dimp\; q \downarrow_2\\ &\\
+\text{\alert{(1)}}\; \;  & p \rtran{a}_1 p'\; \imp\; \rcb{\exists}{q'}{q' \in S_2}{q \rtran{a}_2 q'\, \land\, \pair{p',q'} \in R}   \\
+\text{\alert{(2)}}\; \;  & q \rtran{a}_2 q'\; \imp\; \rcb{\exists}{p'}{p' \in S_1}{p \rtran{a}_1 p'\, \land\, \pair{p',q'} \in R}   
+\end{align*}
+
+%\begin{equation*}
+%\xymatrix{
+%p \ar[d]^-{a} & \hspace{-1.5cm} R  & \hspace{-2.7cm} q
+%    & \! \! \text{\raisebox{-10mm}{\Huge $\Leftrightarrow$}} \! \! &   &  
+%    &  q \ar[d]^-{a} \\
+%p'           &   &           &                                   & p'\hspace{-2.7cm} &  R \hspace{-1.5cm} &  q'
+%}
+%\end{equation*}
+\centering
+\begin{tikzpicture}[%
+    every edge/.style={draw, thick,-latex',shorten >= 2pt}]
+  \tikzstyle{l} = [auto,inner sep=1pt]
+  % the square
+  \node(p){$p$};\node[right=2.3 of p](q2){$q$};
+  \node[below=1 of p](p'){$p'$};\node(q')at(p'-|q2){$q'$};
+  % the R parts
+  \node[right=0 of p](R1){$R$};\node[right=0 of R1](q){$q$};
+  \node[left=0 of q'](R2){$R$};\node[left=0 of R2](p'2){$p'$};
+  % the arrows
+  \draw[->] (p)edge node[l]{$a$}(p') (q2)edge node[l]{$a$}(q');
+  \node at ($(p)!.5!(q')$){{\Large $\Rightarrow$}};
+  %%%%%%%
+  % the square
+  \node[right=2.3 of q2](pp){$p$};\node[right=2.3 of pp](q2){$q$};
+  \node[below=1 of pp](p'){$p'$};\node(q')at(p'-|q2){$q'$};
+  % the R parts
+  \node[right=0 of p'](R1){$R$};\node[right=0 of R1](q){$q'$};
+  \node[left=0 of q2](R2){$R$};\node[left=0 of R2](p'2){$p$};
+  % the arrows
+  \draw[->] (pp)edge node[l]{$a$}(p') (q2)edge node[l]{$a$}(q');
+  \node at ($(pp)!.5!(q')$){{\Large $\Leftarrow$}};
+
+\end{tikzpicture}
+
+\end{block}
+\end{slide}
+
+
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Examples}
+
+\doExercise{Find bisimulations that include $\pair{q_1,m}$}{
+\begin{equation*}
+\xymatrix{
+& q_1  \ar[ld]_{a}  \ar[rd]^{a} & & & & m \ar[d]_{a}\\
+q_2 \ar[rr]^{c}  && q_3 \ar@(ur,dr)[]^{c}  & & & n\ar@(ur,dr)[]^{c}
+}
+\end{equation*}
+% R = \enset{(q_1,m), (q_2, n), (q_3,n) }
+}
+
+\doExercise{Find bisimulations that include $\pair{q_1,h}$}{
+
+\begin{equation*}
+\xymatrix{
+q_1 \ar[r]^{a} & q_2  \ar[r]^{a}  & q_3  \ar[r]^{a} & \cdots & & h\ar@(ur,dr)[]^{a}  \\
+}
+\end{equation*}
+% R = \setdef{q_i, h}{i \geq 1}  
+}
+
+\end{slide}
+
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Exercises}
+
+\doExercise{Check if there is a bisimulation that include $\pair{q_1,p_1}$}{
+\vspace*{-3mm}
+\begin{equation*}
+\xymatrix{
+& q_1  \ar[ld]_{a}  \ar[rd]^{a} & & & & p_1  \ar[d]^{a} \\
+q_2 \ar[d]^{c}  && q_3  \ar[d]^{c}  & && p_2  \ar[ld]_{c}  \ar[rd]^{c} & \\
+q_4 & & q_5 & &p_4 & & p_5\\
+% & q_1  \ar[ld]_{a}  \ar[rd]^{a} & & & & p_1  \ar[d]^{a} \\
+% q_2 \ar[d]^{\rdb{b}}  && q_3  \ar[d]^{c}  & && p_2  \ar[ld]_{\rdb{b}}  \ar[rd]^{c} & \\
+% q_4 & & q_5 & &p_4 & & p_5
+}
+\end{equation*}
+}
+\end{slide}
+
+
+\begin{slide}{Exercises}
+\doExercise{Check if there is a bisimulation that include $\pair{q_1,p_1}$}{
+\vspace*{-3mm}
+\begin{equation*}
+\xymatrix{
+% & q_1  \ar[ld]_{a}  \ar[rd]^{a} & & & & p_1  \ar[d]^{a} \\
+% q_2 \ar[d]^{c}  && q_3  \ar[d]^{c}  & && p_2  \ar[ld]_{c}  \ar[rd]^{c} & \\
+% q_4 & & q_5 & &p_4 & & p_5\\
+& q_1  \ar[ld]_{a}  \ar[rd]^{a} & & & & p_1  \ar[d]^{a} \\
+q_2 \ar[d]^{\rdb{b}}  && q_3  \ar[d]^{c}  & && p_2  \ar[ld]_{\rdb{b}}  \ar[rd]^{c} & \\
+q_4 & & q_5 & &p_4 & & p_5
+}  
+\end{equation*}
+}
+
+\doExercise{Check if there is a bisimulation that include $\pair{P,Q}$}{
+  \vspace*{-5mm}
+  \begin{align*}
+      P &= coin.(\ainv{coffee}.P + \ainv{tea}.P)
+      &
+      Q &= coin.\ainv{coffee}.Q + coin.\ainv{tea}.Q
+  \end{align*}
+}
+
+\end{slide}
+
+
+
+% Definition
+% p∼q ≡ ⟨∃R :: Risabisimulationand⟨p,q⟩∈R⟩
+%----------------------------------------------------------------------------------
+\begin{slide}{Bisimilarity}
+\small
+
+\begin{block}{Definition}
+\centering
+\[p \sim q\; \equiv\; \rcb{\exists}{R}{}{R\; \text{is a bisimulation and}\; \pair{p,q} \in R} 
+\]
+\emph{We say \alert{$p$ is bisimilar to $q$}.}
+\end{block}
+
+
+\begin{block}{Lemma}
+\centering
+Two processes $P$ and $Q$ are bisimilar if there is a bisimulation that includes $\pair{P,Q}$.
+\end{block}
+
+\begin{block}{Lemma}
+The bisimilarity relation is an equivalence relation\\
+\faded{(ie, symmetric, reflexive and transitive)}
+\end{block}
+
+
+% \begin{block}{Automata simulation}
+%   \[\pair{S_1,\set{s_1},\dda_1,\rra_1} \lesssim \pair{S_2,\set{s_2},\dda_2,\rra_2}\; \equiv\; s_1 \lesssim s_2 
+% \]
+% \end{block}
+
+% \begin{block}{Lemma}
+% The similarity relation is a preorder\\
+% \faded{(ie, reflexive and transitive)}
+% \end{block}
+\end{slide}
+
+
+
+\section{Generalising Observational Equivalences}
+
+\begin{frame}{$F$-Transition Systems and Observational \underline{Equivalence}}
+
+  \begin{definition}
+    Fix a functor $F$ and consider two transition systems
+    $f : X \to F X$ and $g : Y \to F Y$. Two states $x \in X$, $y \in Y$
+    are observationally equivalent if there exists a relation
+    $R \subseteq X \times Y$ with $(x,y) \in R$ and there exists a
+    transition system $b : R \to FR$ such that the diagram below commutes
+    \[
+      \xymatrix{
+        X \ar[d]_{f} & \ar[l]_{\pi_1}  R \ar[r]^{\pi_2} \ar[d]_{b} & Y \ar[d]^{g} \\
+        F X  & \ar[l]^{F \pi_1} FR \ar[r]_{F \pi_2} & F Y
+        }
+    \]
+    If such is the case we write \alert{$x \sim y$}  
+  \end{definition}
 \end{frame}
 
+\begin{frame}{Observational Equivalence for Moore Automata}
+  Given $\pv{o_1}{n_1} : X \to A \times X$ and
+  $\pv{o_2}{n_2} : Y \to A \times Y$ we obtain from the previous slide 
+  that $x \sim y$ iff
+  \begin{itemize}
+  \item $o_1(x) = o_2(y)$
+  \item $n_1(x) \sim n_2(y)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Observational Equivalence for Labelled Transition Systems}
+  Recall that we used systems of type $X \to \Pow(X)^L$ for establishing the
+  \alert{semantics} of \alert{CCS processes}. This means that \dots
+
+  notions of observational behaviour/equivalence for such transition systems
+  directly impact our concurrent language
+
+  \vfill Given $\overline{t_1} : X \to \Pow(X)^L$ and
+  $\overline{t_2} : Y \to \Pow(Y)^L$, $x \sim y$ iff for all $l \in L$
+  \begin{itemize}
+  \item $\forall x' \in t_1(x,l).\  \exists y' \in t_2(y,l).\ x' \sim y'$
+  \item $\forall y' \in t_2(y,l).\ \exists x' \in t_1(x,l).\ x' \sim y'$
+  \end{itemize}
+\end{frame}
+
+
+% \begin{frame}{Is Observational Equivalence a Good Notion of Equivalence?}
+
+%   \begin{block}{Coinduction Principle}
+%       Two states $x,y$ are observationally \alert{equivalent} iff they produce the
+%       \alert{same} observational behaviour
+%   \end{block}
+  
+% \end{frame}
 
 \end{document}
