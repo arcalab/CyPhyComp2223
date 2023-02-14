@@ -48,7 +48,8 @@ At the end of the module, the student will:
 # Summaries
 
   - __14 feb. 2023__ – Introduction to the module and its dynamics ([slides](slides/1-intro.pdf))
-  - __17 feb. 2023__ - Formalising and reasoning over labelled transition systems ([slides](2-behabiour.pdf))
+  - __17 feb. 2023__ - Formalising and reasoning over labelled transition systems ([slides](slides/2-behaviour.pdf))
+
 
                                                                 
 
