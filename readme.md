@@ -48,7 +48,7 @@ At the end of the module, the student will:
 # Summaries
 
   - __14 feb. 2023__ – Introduction to the module and its dynamics ([slides](slides/1-intro.pdf))
-  - ...
+  - __17 feb. 2023__ - Formalising and reasoning over labelled transition systems ([slides](2-behabiour.pdf))
 
                                                                 
 
@@ -136,6 +136,6 @@ Chucky Ellison and Grigore Rosu.
 
 # Contact
 
-The day and time for _appointments_ is Wednesday afternoon (but please
-email us the day before if you wish to meet). If you prefer you
-can also just send an email with your questions to [Renato Neves](mailto:nevrenato@di.uminho.pt) or to [José Proença](mailto:pro@isep.ipp.pt).
+The day and time for _appointments_ is Wednesday afternoon (Renato Neves) or Thursday morning (José Proença). Please
+email us the day before if you wish to meet. If you prefer you
+can also just send an email with your questions to [Renato Neves](mailto:nevrenato@di.uminho.pt) or to [José Proença](mailto:pro@isep.ipp.pt), or we can try to book an online meeting.
