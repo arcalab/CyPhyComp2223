@@ -231,6 +231,10 @@
              pin=below:\tiny{parallelism operator}]  {};
    \end{tikzpicture}
 
+   \doExercise{Value of $y$?}{
+    $int~x=0~;~ int~\alert{f()}\{ x+1; return~x;\}~~int~\alert{g()} \{x-1; return~x;\}~~ int~y = \alert{f()}+\alert{g()};$
+   } 
+
    \vfill
    \underline{Widely used} programming languages \alert{still} lack a formal
    semantics
@@ -260,7 +264,7 @@
 \end{frame}
 
 \begin{frame}{Preliminaries pt. II - the List and Powerset functors}
-  The list functor - $X \mapsto X^\ast, \hspace{0.2cm} f \mapsto \tikzmark{x1}
+  The list functor - $[X] \mapsto X^\ast, \hspace{0.2cm} [f] \mapsto \tikzmark{x1}
   \prog{map}\ f \tikzmark{x2}$
 
   \vspace{1cm}
@@ -268,12 +272,12 @@
   is that we do not look at the order in which elements appear and
   how many times they repeat. Formally,
   \[
-    X \mapsto \{ A \mid A \subseteq X \}, \qquad f \mapsto
-    (A \mapsto \{ f(a) \mid a \in A \})
+    \texttt{P}(X) \mapsto \{ A \mid A \subseteq X \}, \qquad
+    \texttt{P}(f) \mapsto (A \mapsto \{ f(a) \mid a \in A \})
   \]
 
   \begin{exampleblock}{\exercise Powerset on Booleans}
-    $\mathtt{Bool} \mapsto \{ \emptyset, \{ \top \}, \{ \bot \}, \{ \top, \bot \} \}$
+    $\texttt{P}(\mathtt{Bool}) \mapsto \{ \emptyset, \{ \top \}, \{ \bot \}, \{ \top, \bot \} \}$
   \end{exampleblock}
   
   \begin{tikzpicture}[overlay,remember picture,
@@ -332,7 +336,7 @@
     \centering 
     \wrap{\begin{tikzpicture}[aut]
       \node[st,initial above]  (s_0) {$A_0$};
-      \node[st] (s_1) [right of=s_0] {$A_1$};
+      \node[st,final] (s_1) [right of=s_0] {$A_1$};
       \path[->]
         (s_0) edge  node {a}  (s_1)
         (s_0) edge[loop left] node {b}  ()
