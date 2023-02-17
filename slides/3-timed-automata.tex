@@ -1,0 +1,1136 @@
+%\documentclass[handout]{beamer}
+\documentclass[aspectratio=169]{beamer}
+\usepackage{etex} % fixes new-dimension error
+
+
+\usepackage{graphicx,amsmath}
+\usepackage{stmaryrd} % cf. interleave
+\usepackage{booktabs}
+\usepackage{amscd}
+\usepackage{multicol}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{alltt}
+\usepackage{proof}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usepackage[new]{old-arrows}
+\usepackage[all]{xy}
+\usepackage{pgfplots}
+\usepackage{textcomp}
+
+\input{macros/macros}
+\input{macros/beamerconf}
+% \input{macros/preamble}
+
+
+%\def\larrow#1#2#3{\xymatrix{ #3 & #1 \ar[l] _-{#2} }}
+\def\larrow#1#2#3{\xymatrix{ #3 & #1 \ar[l] _--{#2} }}
+\def\rarrow#1#2#3{\xymatrix{ #1 \ar[r]^-{#2} & #3 }}
+\def\arLaw#1#2#3#4#5{
+\xymatrix{
+        #1      \ar@/^1pc/[rr]^-{#4} &
+        #5 &
+        #2      \ar@/^1pc/[ll]^-{#3}
+}}
+\def\arLeq#1#2#3#4{\arLaw{#1}{#2}{#3}{#4}\leq}
+%------ using pstricks (rnode etc) ------------------------------------------
+% \usepackage{pstricks,pst-node,pst-text,pst-3d}
+
+
+
+\def\eqm{\mathbin{\equiv}}                     
+\def\noeqm{\mathbin{\not\!\equiv}}  
+%\newcommand{\flam}[2]{\lambda_{#1}\; .\; #2}
+\def\existential#1#2{\exists_{#1}\;.\; #2}
+\def\existencial#1#2{\exists_{#1}\;.\; #2}
+
+\def\pv#1#2{\langle #1 \rangle #2}
+\def\nc#1#2{[#1]#2}
+\def\pvo#1#2{\langle \! \! \! \langle #1 \rangle \! \! \! \rangle\, #2}
+\def\nco#1#2{\llbracket #1 \rrbracket #2}
+\def\cvg#1{\llbracket \downarrow \rrbracket #1}
+\def\cvgr#1#2{\llbracket #1 \downarrow \rrbracket #2}
+\def\cvgl#1#2{\llbracket \downarrow  #1 \rrbracket #2}
+\def\cvglr#1#2{\llbracket \downarrow  #1 \downarrow \rrbracket #2}
+\def\lfp#1#2{\mu {#1}\, .\, {#2}}
+\def\lpf#1#2{\mu {#1}\, .\, {#2}}
+\def\gfp#1#2{\nu {#1}\, .\, {#2}}
+\def\gpf#1#2{\nu {#1}\, .\, {#2}}
+\def\mset#1{\vvv #1 \vvv}
+\def\vvv{\vert \! \vert}
+\def\mnc#1{\vvv [#1] \vvv}
+\def\mpv#1{\vvv \langle #1 \rangle \vvv}
+\def\bcomp#1{#1^{\text{c}}}
+\def\eqm{\mathbin{\simeq}}
+\def\noeqm{\mathbin{\not\!\simeq}}
+\def\universal#1#2{\forall_{#1}\;.\; #2}
+\def\existential#1#2{\exists_{#1}\;.\; #2}
+\def\oexistential#1#2{\exists^{1}_{#1}\;.\; #2}
+\def\MM{\mathcal{M}}
+\def\uppaal{\textsc{Uppaal}}
+\def\cc#1{\mathcal{C}(#1)}
+\def\R{\mathcal{R}}
+\def\TL#1{\mathcal{T}(#1)}
+\def\ET#1{\mathsf{ExecTime(#1)}}
+
+\def\pow#1{\ap{{\cal P}}{(#1)}}           \def\pow#1{{\cal P}#1} % P(X) 
+\def\tran#1{\stackrel{#1}{\longrightarrow}}
+\newcommand{\fdec}[3]{#1: #2 \longrightarrow  #3}
+
+
+\begin{document}
+
+\setLecture{3}{Real-time models: Timed Automata}
+\frame[plain]{\titlepage}
+
+% \title{
+%   Time-critical reactive systems \\ (modelling )  }
+% \frame[plain]{\titlepage}
+
+%slides de motivacao a retirar se aparecerem primeiro os do mCRL2
+
+\section{Motivation}
+% \begin{frame}[label=conclusion, standout]{Conclusion}
+% Awesome slide
+% \end{frame}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Motivation}\label{xxx}
+\small
+
+Specifying an airbag saying that  \alert{in a car crash the airbag eventually inflates}
+maybe not enough, but:
+\begin{center}
+ in a car crash the airbag eventually inflates \structure{within 20ms}
+\end{center}
+
+\caixa{\emph{Correctness in time-critical systems not only depends on the logical result of the computation, but also 
+\structure{on the time at which the results are produced}}
+\begin{flushright}
+[Baier \& Katoen, 2008]
+\end{flushright}} 
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Examples of time-critical systems}
+\small
+\begin{block}{Network-based traffic lights}
+Lights activate at very specific time intervals.
+\end{block}
+
+\begin{block}{Bounded retransmission  protocol}
+mmunication of large files between a remote control unit and a video/audio equipment. Correctness relies on:
+\begin{itemize}
+\item transmission and synchronization delays
+\item time-out values
+\end{itemize}
+\end{block}
+
+\begin{block}{And many others...}
+\begin{itemize}
+\item medical instruments
+\item hybrid systems (e.g. for cruise controllers)
+% \item $\cdots$
+\end{itemize}
+\end{block}
+\end{slide}
+
+
+%\end{document}
+% fim slides motivacao
+
+
+\begin{slide}{Syllabus}
+  \frsplitt{
+    \begin{itemize}
+      \item CSS: a simple language for concurrency
+      \begin{itemize}
+        \item Syntax
+        \item Semantics
+        \item Equivalence
+      \end{itemize}
+      \alert{
+      \item  {Timed Automata}
+      }
+      \begin{itemize}
+        \alert{
+        \item Syntax
+        \item Semantics (composition, Zeno)
+        \item Equivalence
+        }
+        \item {UPPAAL tool}
+        \begin{itemize}
+           \item Specification
+           \item CTL and Verification
+         \end{itemize}
+      \end{itemize}
+    \end{itemize}
+  }{
+    \begin{itemize}
+      \item A simple C-like language
+      \begin{itemize}
+        \item Syntax
+        \item Semantics (operational)
+      \end{itemize}
+      \item {Hybrid-language}: adding differential equations
+      \begin{itemize}
+        \item Syntax
+        \item Semantics
+        \item {Lince tool}
+        \begin{itemize}
+          \item Specification
+          \item Analysis
+        \end{itemize}
+      \end{itemize}
+      \item {Monads}: semantics with computational effects
+        % \begin{itemize}
+        %   \item Modelling Cyber-physical behaviour with Monads
+        %   \item Hybrid Monad
+        %   \item Monad Combination
+        % \end{itemize}
+    \end{itemize}
+  }
+\end{slide}
+
+
+\begin{frame}{Table of contents}
+  \setbeamertemplate{section in toc}[sections numbered]
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Motivation}
+\small
+
+\begin{itemize}
+\item \alert{timed transition systems}, \alert{timed Petri nets}, \alert{timed IO automata}, \alert{timed process algebras} and other formalisms associate lower and upper bounds to transitions, but no \structure{time constraints} to transverse the automaton.
+\item Expressive power is often somehow limited and \alert{infinite}-state LTS (introduced to express \structure{dense} time models) are 
+difficult to handle in practice
+\end{itemize}
+\end{slide}
+
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Motivation}
+\small
+
+\begin{block}{Example}
+Typical process algebra tools %, such as mCRL2,
+are unable to express a \alert{system which has one action $a$ which can only occur at time point $5$
+with the effect of moving the system to its initial state.}
+\end{block}
+~\\
+
+This example has, however, a simple description in terms of time measured by a \alert{stopwatch}:
+\begin{enumerate}
+\item Set the stopwatch to 0
+\item When the stopwatch measures 5, action $a$ can occur. If $a$ occurs go to 1., if not idle forever.
+\end{enumerate}
+
+~\\
+\end{slide}
+
+
+
+
+
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Motivation}
+\small
+This suggests resorting to an \structure{automaton-based formalism} with an explicit notion of 
+\structure{clock} (stopwatch) to control availability of transitions.
+
+
+\begin{center}
+\fbox{\structure{Timed Automata} [Alur \& Dill, 90]}
+\end{center}
+
+
+\begin{itemize}
+\item emphasis on decidability of the \structure{reachability} problem and corresponding practically efficient algorithms
+\item infinite underlying  timed transition systems are converted to \structure{finitely large} symbolic transition systems where \structure{reachability} becomes decidable (\alert{region} or \alert{zone} graphs)
+\end{itemize}
+
+\noindent
+\alert{Associated tools}
+\frsplit{
+\begin{itemize}
+\item \underline{\uppaal}\ [Behrmann, David, Larsen, 04]
+\item \textsc{Imitator} [André, 09]
+\end{itemize}
+}{
+\begin{itemize}
+\item \textsc{Prism} [Parker, Kwiatkowska, 00]
+\item \textsc{Kronos} [Bozga, 98]
+\end{itemize}
+}
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Motivation}
+\small
+
+
+
+\begin{center}
+\fbox{\structure{UPPAAL} = (\structure{Upp}sala University + \structure{Aal}borg University) [1995]}
+\end{center}
+
+\begin{itemize}
+\item  A toolbox for \structure{modeling}, \structure{simulation} and \structure{verification} of real-time systems
+\item where systems are modeled as networks of \structure{timed automata} enriched with \alert{integer variables},
+\alert{structured data types},
+\alert{channel syncronisations} and
+\alert{urgency annotations}
+\item  Properties are specified in a subset of CTL 
+\end{itemize}
+
+
+\begin{flushright}
+\texttt{www.uppaal.org}
+\end{flushright}
+\end{slide}
+
+
+%-----------------------------
+\section{Timed Automata Definition} %----
+%-----------------------------
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Timed automata}
+\small
+
+\caixa{Finite-state machine equipped with a finite set of real-valued clock variables (\alert{clocks})}
+
+\structure{Clocks}
+\begin{itemize}
+% \item \structure{dense-time} model
+\item clocks can only be \structure{read} or
+\item \structure{reset to zero}, after which they start increasing their value implicitly as time progresses
+\item the value of a clock corresponds to time elapsed since its last reset 
+\item all clocks proceed synchronously (at the same rate)
+\end{itemize}
+
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Timed automata Definition}
+\small
+
+\vspace*{-1mm}
+\begin{block}{}
+\begin{equation*}
+\mathbf{\pair{L, L_0, Act, C, Tr, Inv}}
+\end{equation*}
+\vspace*{-1mm}
+where
+\vspace*{-1mm}
+\begin{itemize}
+\item \alert{$L$} is a set of \structure{locations}, and $\alert{L_0} \subseteq L$ the set of \structure{initial} locations
+\item \alert{$Act$} is a set of \structure{actions} and \alert{$C$} a set of \structure{clocks}
+\item $\alert{Tr} \subseteq L \times \cc{C} \times Act \times \pow{(C)} \times L$ is the \structure{transition relation}
+\vspace*{-1mm}
+\begin{equation*}
+\ell_1\; \tran{g,a,U}\;  \ell_2
+\end{equation*}
+\vspace*{-1mm}
+denotes a transition from location $\ell_1$ to $\ell_2$, \structure{labelled} by $a$, enabled if \structure{guard} $g$
+is valid, which, when performed, \structure{resets} the set $U$ of \structure{clocks}
+\item $\fdec{\alert{Inv}}{L}{\cc{C}}$ is the assignment of \structure{invariants} to locations  
+\end{itemize}
+\vspace*{-1mm}
+where \alert{$\cc{C}$} denotes the  set of \structure{clock constraints} over a set $C$ of clock variables
+\end{block}
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Example: the lamp interrupt}
+\small
+(extracted from \uppaal)
+
+\begin{figure}[htb]
+  \centering
+  % Requires \usepackage{graphicx}
+  % \includegraphics[width=7cm]{./images/lamp1.jpg}\\
+  \uppbox[60mm]{Lamp}{./images/Lamp.pdf}
+\end{figure}
+
+\vspace*{-3mm}
+\doSimpleExercise{Define $\pair{L, L_0, Act, C, Tr, Inv}$.}
+
+\end{slide}
+
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Clock constraints}
+\small
+
+$\cc{C}$ denotes the  set of clock constraints over a set $C$ of clock variables.
+Each constraint is formed according to 
+\begin{equation*}
+g \; ::=\; x \mathbin{\square} n \; \mid\; x - y \mathbin{\square} n  \; \mid\; g \land g \;\mid\; true
+\end{equation*}
+where $x,y \in C, n \in \N$ and $\square \in \set{<,\leq,>,\geq,=}$
+
+
+%\pause
+used in
+\begin{itemize}
+\item  \structure{transitions} as \structure{guards} (enabling conditions)
+\fbox{a transition cannot occur if its guard is invalid}
+\item  \structure{locations} as \structure{invariants} (safety specifications)
+\fbox{a location must be left before its invariant becomes invalid}
+\end{itemize}
+
+\begin{block}{Note}
+Invariants are the \structure{only} way to force transitions to occur
+\end{block}
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Guards, updates \&  invariants}
+\small \centering
+
+\begin{tabular}{c}
+   \includegraphics[width=8cm]{./images/model0.jpg} \\  \includegraphics[width=7cm]{./images/model1.jpg}
+\end{tabular}
+
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Transition guards \& location invariants}
+\small
+
+\begin{block}{Demo (in  \uppaal)}
+~\\
+
+
+\begin{tabular}{ccc}
+  % \includegraphics[width=3cm]{./images/g1.jpg} & \includegraphics[width=3cm]{./images/g2.jpg} &  \includegraphics[width=3cm]{./images/g3.jpg}
+  % \\
+  \uppboxv[20mm]{Process 1}{images/p1.pdf} &
+  \uppboxv[20mm]{Process 2}{images/p2.pdf} &
+  \uppboxv[20mm]{Process 3}{images/p3.pdf}
+\end{tabular}
+
+\end{block}
+\end{slide}
+
+
+\section{Parallel Composition}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Parallel composition of timed automata}
+\small
+
+\begin{itemize}
+\item Action labels as \structure{channel} identifiers
+\item Communication by \structure{forced handshacking} over a subset of common actions
+\item  Is defined as an automaton construction over a finite set of
+  timed automata originating a so-called \alert{network} of timed
+  automata
+\end{itemize}
+
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Parallel composition of timed automata}
+\small
+
+%\begin{block}{$TA_1 \parallel TA_2$}
+Let $H \subseteq Act_1 \cap Act_2$. The parallel composition of $ta_1$ and  $ta_2$ synchronizing on $H$
+is the timed automata
+\begin{equation*}
+\structure{ta_1 \parallel_H ta_2 := \pair{L_1 \times L_2, L_{0,1} \times L_{0,2}, Act_{\parallel_H}, C_1 \cup C_2, Tr_{\parallel_H}, Inv_{\parallel_H}}}
+\end{equation*}
+where
+\begin{itemize}
+\item $\structure{Act_{\parallel_H}} = ((Act_1 \cup Act_2) - H) \cup \set{\tau}$
+\item $\structure{Inv_{\parallel_H}} \pair{\ell_1,\ell_2} = Inv_1(\ell_1) \land  Inv_2(\ell_2)$
+\item $\structure{Tr_{\parallel_H}}$ is given by:
+\begin{itemize}
+\item $\pair{\ell_1,\ell_2} \tran{g,a,U} \pair{\ell'_1,\ell_2}\; $ if $\; a \not \in H \land  \ell_1 \tran{g,a,U} \ell'_1 $
+\item $\pair{\ell_1,\ell_2} \tran{g,a,U} \pair{\ell_1,\ell'_2}\; $ if $\; a \not \in H \land   \ell_2 \tran{g,a,U} \ell'_2$
+\item $\pair{\ell_1,\ell_2} \tran{g,\tau,U} \pair{\ell'_1,\ell'_2}\; $ if $\; a \in H \land  \ell_1 \tran{g_1,a,U_1} \ell'_1 \land \ell_2 \tran{g_2,a,U_2} \ell'_2$\\
+with $g = g_1 \land g_2$ and $U = U_1 \cup U_2$
+\end{itemize}
+\end{itemize}
+%\end{block}
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Example: the lamp interrupt as a closed system}
+\small
+
+\medskip
+
+\begin{columns}
+\col{
+  \centering    
+  \uppbox[40mm]{Lamp}{./images/Lamp.pdf}\\[2mm]
+  \uppbox[12mm]{User}{./images/User.pdf}
+  % \includegraphics[width=8cm]{./images/lamp2.jpg}\\
+  % \includegraphics[scale=0.1]{./images/User.pdf}\\
+% \end{figure}
+
+}
+\col{
+  \begin{block}{\uppaal:}
+  \begin{itemize}
+  \item takes $H = Act_1 \cap Act_2$ (actually as \structure{complementary} actions denoted by the \structure{?} and \structure{!} 
+  annotations)
+  \item  only deals with \structure{closed} systems 
+  \end{itemize}
+  \end{block}
+
+  \doSimpleExercise{Define the TA of the composition.}
+}
+\end{columns}
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Exercise: worker, hammer, nail}
+\small
+\begin{columns}
+\col[.45]{
+  \centering
+  ~\\[2mm]
+  % Requires \usepackage{graphicx}
+  % ~~~~\includegraphics[width=45mm]{./images/WHN.jpg}
+  \uppbox[30mm]{Worker}{./images/Worker.pdf}\\[2mm]
+  \uppbox[30mm]{Hammer}{./images/Hammer.pdf}\\[2mm]
+  \uppbox[30mm]{Nail}{./images/Nail.pdf}\\
+}
+\col[.54]{
+  \doExercise[55mm]{Define the TA of the composition.}{}
+}
+\end{columns}
+\end{slide}
+
+
+\section{Semantics}
+
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Timed Labelled Transition Systems}
+\small\centering
+\begin{tabular}{lc@{~~}l}
+\toprule 
+\alert{Syntax} && \alert{Semantics}\\
+\cmidrule(lr){1-3}
+\gry{\emph{How to write}} & & \gry{\emph{How to execute}}\\
+Process Algebra &  & LTS (Labelled Transition Systems)\\
+\structure{Timed Automaton} &  & TLTS (Timed LTS) \\
+\bottomrule
+\end{tabular}
+~\\
+~\\
+~\\
+\pause
+
+\begin{block}{Timed LTS}
+Introduce \structure{delay transitions} to capture the passage of time within a LTS:
+\begin{align*}
+s \tran{a} s' & \;\; \text{for $a \in Act$, are ordinary transitions due to action occurrence }\\
+s \tran{d} s' &\; \;  \text{for $d \in \R^{+}_0$, are \structure{delay} transitions}
+\end{align*}
+subject to a number of constraints, eg, 
+\end{block}
+\end{slide}
+
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Dealing with time in system models}
+\small
+\begin{block}{Timed LTS}
+\begin{itemize}
+\item \structure{time additivity}
+\begin{equation*}
+(s \tran{d} s'  \land 0 \leq d' \leq d)\; \imp\; s  \tran{d'} s'' \tran{\; d-d'} s' \; \text{for some state $s''$}
+\end{equation*}
+\item delay transitions are \structure{deterministic}
+\begin{equation*}
+(s \tran{d} s'  \land s \tran{d} s'')\; \imp\; s'  = s''
+\end{equation*}
+%\item a state can only reach itself \structure{without delay}
+%\begin{equation*}
+%s \tran{0} s  \; \text{for all states $s$}
+%\end{equation*}
+\end{itemize}
+\end{block}
+\end{slide}
+
+
+
+
+
+
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Semantics of Timed Automata}
+\small
+
+\begin{block}{Semantics of TA:}
+Every TA $ta$ defines a TLTS 
+\begin{equation*}
+\structure{\TL{ta}}
+\end{equation*}
+whose states are pairs 
+\begin{equation*}
+\pair{\structure{\text{location}}, \structure{\text{clock valuation}} }
+\end{equation*}
+with \structure{infinitely}, even \structure{uncountably} many states, and infinite branching
+\end{block}
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Clock valuations}
+\small
+
+
+\begin{block}{Definition}
+A \structure{clock valuation} \alert{$\eta$} for a set of clocks $C$ is a function 
+\begin{equation*}
+\fdec{\alert{\eta}}{C}{\R_0^+}
+\end{equation*}
+assigning to each clock $x \in C$ its current value $\alert{\eta}\, x$.
+\end{block}
+~\\
+
+\begin{block}{Satisfaction of clock constraints}
+\begin{align*}
+\alert{\eta} \models x \mathbin{\square} n \; & \dimp\; \alert{\eta}\, x \mathbin{\square} n\\
+\alert{\eta} \models x-y \mathbin{\square} n \; & \dimp\; (\alert{\eta}\, x - \alert{\eta}\, y) \mathbin{\square} n\\
+\alert{\eta} \models g_1 \land g_2 \; & \dimp\; \alert{\eta} \models g_1 \land \alert{\eta} \models g_2
+\end{align*}
+\end{block}
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Operations on clock valuations}
+\small
+
+
+\begin{block}{Delay}
+For each $d \in \R_0^+$, valuation $\eta \alert{+ d}$ is given by
+\begin{equation*}
+(\eta \alert{+ d})\, x\; =\; \eta\, x\; +\; d
+\end{equation*}
+\end{block}
+~\\
+
+\begin{block}{Reset}
+For each $R \subseteq C$, valuation $\eta\alert{[R]}$ is given by
+\begin{equation*}
+\begin{cases}
+\eta\alert{[R]}\, x\; =\; \eta\, x & \; \rimp\; x \not\in R\\
+\eta\alert{[R]}\, x\; =\; 0 & \; \rimp\; x \in R
+\end{cases}
+\end{equation*}
+\end{block}
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{From $ta$ to $\TL{ta}$}
+\small
+Let $ta = \pair{L, L_0, Act, C, Tr, Inv}$
+\begin{equation*}
+ \structure{\TL{ta}\; =\; \pair{S, S_0 \subseteq S, N, T}}
+\end{equation*}
+where
+\begin{itemize}
+\item $S = \setdef{\pair{l,\alert{\eta}} \in  L \times \alert{(\R_0^+)^C}}{\alert{\eta} \models Inv(l)}$
+\item $S_0 = \setdef{\pair{\ell_0,\alert{\eta}}}{\ell_0 \in L_0\; \land\;  \alert{\eta}\, x = 0\; \text{for all $x \in C$}}$
+\item $N = Act \cup \alert{\R_0^+}$ (ie, \alert{transitions can be labelled by actions or delays})
+\item $T \subseteq S \times N \times S$ is given by:
+\end{itemize}
+\begin{align*}
+\pair{l,\alert{\eta}} \tran{a} \pair{l',\alert{\eta'}}\; & ~~\rimp~~\; 
+\exists_{l \tran{g,a,U} l' \in Tr}  \; \;\alert{\eta} \models g \; \land\; \alert{\eta'} = \alert{\eta}[U] \; \land\;  \alert{\eta'} \models Inv(l')\\
+\pair{l,\alert{\eta}} \tran{\alert{d}} \pair{l,\alert{\eta +d}}\; & ~~\rimp~~\; 
+\exists_{\alert{d \in \R_0^+}}  \; \;  \alert{\eta + d} \models Inv(l)
+\end{align*}
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Example: the simple switch}
+\small
+\begin{figure}[htb]
+  \centering
+  % \includegraphics[width=5cm]{./images/PASswitchA.jpg}\\
+  \uppbox[5cm]{Switch}{./images/SwitchA}\\
+\end{figure}
+
+\doExercise{Define $\TL{\mathsf{SwitchA}}$}{
+\begin{equation*}
+S = \pause \setdef{\pair{off,\overline t}}{t \in \R_0^+} \cup \setdef{\pair{on,\overline t}}{0 \leq t \leq 2} 
+\end{equation*}
+where $\overline{t}$ is a shorthand for $\eta$ such that $\eta\, x = t$
+}
+\exerciseBack
+
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Example: the simple switch}
+\small
+\begin{figure}[htb]
+  \centering
+  % \includegraphics[width=5cm]{./images/PASswitchA.jpg}\\
+  \uppbox[5cm]{Switch}{./images/SwitchA}\\
+\end{figure}
+
+\doExercise{Define $\TL{\mathsf{SwitchA}}$}{
+\vspace{-7mm}
+\begin{align*}
+\only<1>{T = \ldots}
+\uncover<2->{
+\pair{off,\overline t} \tran{d} \pair{off,\overline t+d}\; & \; \text{for all $t,d \geq 0$}\\
+ \pair{off,\overline t} \tran{in} \pair{on,\overline 0}\; & \; \text{for all $t \geq 0$}\\
+\pair{on,\overline t} \tran{d} \pair{on,\overline t+d}\; & \; \text{for all $t,d \geq 0$ and $t+d \leq 2$}\\
+\pair{on,\overline t} \ \tran{out} \pair{off,\overline t}\; & \; \text{for all $1 \leq t \leq 2$}
+}
+\end{align*}
+\vspace*{-7mm}
+}
+\exerciseBack
+\end{slide}
+\exerciseAdd
+
+
+\section{Zeno}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Note}
+\small
+
+\begin{itemize}
+\item The elapse of time in timed automata \structure{only} takes place in locations:
+\item ... actions take place instantaneously 
+\item Thus, several actions may take place at a single time unit
+\end{itemize}
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Behaviours}
+\small
+
+\begin{itemize}
+\item Paths in $\TL{ta}$ are \structure{discrete representations of continuous-time behaviours} in $ta$
+\item ... at least they indicate the states immediately before and after the execution of an action
+%\item Such paths can also be represented graphically through \structure{location diagrams}
+\item However, as interval delays may be realised in \alert{uncountably} many different ways, different paths 
+may represent the same behaviour
+\pause
+\item ... but not all paths correspond to valid  (\structure{realistic}) behaviours:
+\end{itemize}
+
+\begin{block}{undesirable paths:}
+\begin{itemize}
+\item  \structure{time-convergent} paths
+\item  \structure{timelock} paths
+\item  \structure{zeno} paths
+\end{itemize}
+\end{block}
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Time-convergent paths}
+\small
+
+\begin{equation*}
+\pair{l,\eta}  \tran{d_1} \pair{l,\eta + d_1}  \tran{d_2} \pair{l,\eta + d_1 + d_2}  \tran{d_3} \pair{l,\eta + d_1 + d_2 + d_3}  \tran{d_4} 
+\cdots  
+\end{equation*}
+such that 
+\begin{equation*}
+\forall_{i \in N}\st\, d_i > 0\; \land\; \sum_{i \in N}  d_i = d
+\end{equation*}
+ie, the \alert{infinite sequence of delays converges toward $d$}
+
+\begin{itemize}
+\item Time-convergent path are \alert{conterintuitive}; as their existence cannot be avoided, they are simply  \structure{ignored} in the semantics of Timed Automata
+\item Time-\structure{divergent} paths are the ones in which time always progresses
+\end{itemize}
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Time-convergent paths}
+\small
+
+\begin{block}{Definition}
+An infinite path fragment $\rho$ is \structure{time-divergent} if $\ET{\rho} = \infty$\\
+Otherwise is  \structure{time-convergent}. 
+\end{block}
+
+where
+\begin{align*}
+\ET{\rho}\; & =\; \sum_{i=0 .. \infty} \ET{\delta}\\
+\ET{\delta}\; & =\; \begin{cases}
+0 & \rimp\;  \delta \in Act\\
+\delta & \rimp\:  \delta \in \R_0^+
+\end{cases}
+\end{align*}
+for $\rho$ a path and $\delta$ a label in $\TL{ta}$ 
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Timelock paths}
+\small
+
+\begin{block}{Definition}
+A path is \structure{timelock} if it contains a state with a timelock, ie, a \alert{state
+from which there is not any time-divergent path}
+\vspace{0.3cm}
+
+A \structure{timelock} represents a situation that causes time progress to halt (e.g. when it is impossible to leave a location before its invariant becomes invalid)
+\end{block}
+
+\begin{itemize}
+\item any \structure{teminal state} ($\neq$ terminal location) in $\TL{ta}$ contains a timelock
+\item ... but not all timelocks arise as terminal states in $\TL{ta}$
+\end{itemize}
+\end{slide}
+
+
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Timelock paths}
+\small
+
+\begin{center}
+  % \includegraphics[width=4.5cm]{./images/SwitchB} 
+  \uppbox[4.5cm]{Terminal}{./images/SwitchB} 
+\end{center}
+
+State $\pair{on,2}$ is reachable through path 
+$$\pair{off,0} \tran{s-on} \pair{on,0} \tran{2} \pair{on,2}$$
+and is terminal
+
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Timelock paths}
+\small
+
+
+\begin{center}
+  % \includegraphics[width=4.5cm]{./images/SwitchC} 
+  \uppbox[4.5cm]{Timelock - NotTerminal}{./images/SwitchC} 
+\end{center}
+
+State $\pair{on,2}$ is not terminal but has a \structure{convergent} path:
+
+$$\pair{on,2} \pair{on,2.9}  \pair{on,2.99}  \pair{on,2.999}  ...$$
+
+\end{slide}
+
+
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Zeno}
+\small
+
+\begin{block}{In a Timed Automaton}
+\begin{itemize}
+\item The elapse of time only takes place at \structure{locations}
+\item Actions occur \structure{instantaneously}: at a single time instant several actions may take place
+\end{itemize}
+
+\caixa{... it may perform \structure{infinitely} many actions in a \structure{finite} time interval \\
+(non realizable because it would require infinitely fast processors)}
+\end{block}
+
+\pause
+\begin{block}{Definition}
+An infinite path fragment $\rho$ is \structure{zeno} if it is \alert{time-convergent} and
+\alert{infinitely many actions occur along it}
+
+
+
+A timed automaton $ta$ is \structure{non-zeno} if there is not an initial zeno path in $\TL{ta}$
+\end{block}
+
+\end{slide}
+
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Zeno}
+\small
+
+
+\begin{block}{Example}
+Suppose the user can press the $in$ button when the light is $on$ in
+\begin{figure}[htb]
+  \centering
+  % \includegraphics[width=5cm]{./images/PASswitchD.jpg}\\
+  \uppbox[5cm]{Zeno}{./images/SwitchD}\\
+\end{figure}
+In doing so clock $x$ is reset to 0 and light stays $on$ for more 2 time units (unless the button is pushed again ...)
+\end{block}
+
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Zeno}
+\small
+
+
+\begin{block}{Example}
+\alert{Typical paths:}
+The user presses $in$ \alert{infinitely fast}:
+\begin{equation*}
+\pair{off,0}  \tran{in}  \pair{on,0}  \tran{in}  \pair{on,0}  \tran{in}  \pair{on,0}  \tran{in}  \pair{on,0}  \tran{in} \cdots
+\end{equation*}
+
+
+The user presses $in$ \alert{faster and faster}:
+\begin{equation*}
+\pair{off,0}  \tran{in}   \pair{on,0}  \tran{0.5} \pair{on,0.5} \tran{in} \pair{on,0} \tran{0.25}  \pair{on,0.25}   \tran{in} \pair{on,0}  \tran{0.125}  \cdots
+\end{equation*}
+\end{block}
+
+\caixa{How can this be fixed?}
+
+\myblock{Time shall pass!}
+
+\end{slide}
+
+
+\begin{slide}{Exercise}
+  \doExercise{Recall our lamp}{
+    {\centering
+    \uppbox[40mm]{Lamp}{./images/Lamp.pdf}
+    \tikz[remember picture,overlay]{%
+      \node[pink!40!purple,font=\sf\tiny,xshift=16mm,yshift=2mm] at (current page.center){y<=3600};}
+
+    }
+    \begin{enumerate}
+      \item Describe a \alert{time-divergent} path, if it exists.
+      \item Describe a \alert{time-convergent} path, if it exists.
+      \item Describe a \alert{timelock} path, if it exists.
+      \item Is this automata \alert{non-zeno}? Justify.
+    \end{enumerate}
+  }
+\end{slide}
+
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Zeno}
+\small
+
+
+\begin{block}{Sufficient criterion for nonzenoness}
+A timed automaton is nonzeno if on any of its control cycles time advances with at least some  
+\structure{constant amount} ($\geq 0$). Formally, if for every control cycle
+\begin{equation*}
+{\red \ell_0} \tran{g_0, a_0, U_0} \ell_1 \tran{g_1, a_1, U_1} \cdots  \tran{g_n, a_n, U_n} {\red \ell_0} 
+\end{equation*}
+there exists a clock $x \in C$ such that
+\begin{enumerate}
+\item  $x \in U_i$ (for $0 \leq i \leq n$)
+\item for all clock valuations \structure{$\eta$}, there is a  $\structure{c} \in \N_{>0}$ such that
+\begin{equation*}
+\structure{\eta}(x) < \structure{c}\; \imp\; ((\eta \not\models g_j)\; \lor\; \lnot Inv(\ell_j)) \; \text{for some $0 \leq j \leq n$}
+\end{equation*}
+\end{enumerate}
+
+
+\end{block}
+
+\end{slide}
+
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Warning}
+\small
+
+Both 
+\begin{itemize}
+\item timelocks
+\item zenoness
+\end{itemize}
+are \structure{modelling flaws} and need to be avoided.
+
+
+\begin{block}{Example}
+In the example above, it is enough to impose a non zero minimal delay  between successive button pushings.
+\end{block}
+
+\end{slide}
+
+
+
+
+% ----------------
+
+\section{Behavioural Equivalence}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Traces}
+\small
+
+\begin{block}{Definition}
+A \structure{timed trace} over a \alert{timed LTS} is a (finite or infinite) sequence  $\pair{t_1,a_1}, \pair{t_2,a_2}, \cdots$ in
+ $\R^+_0 \times Act$ such that there exists a path
+\begin{equation*}
+\pair{\ell_0,\eta_0}  \tran{d_1}   \pair{\ell_0,\eta_1}    \tran{a_1}     \pair{\ell_1,\eta_2}    \tran{d_2}    \pair{\ell_1,\eta_3}   \tran{a_2} \cdots 
+\end{equation*}
+such that 
+\begin{equation*}
+t_{i} = t_{i-1} + d_i
+\end{equation*}
+with $t_0=0$ and, for all clock $x$, $\eta_0\, x = 0$.
+\end{block}
+~\\
+
+Intuitively, each $t_i$ is an absolute time value acting as a \alert{time-stamp}.
+
+% \begin{alertblock}{Warning}
+% All results from now on are given over an arbitrary \alert{timed LTS}; they naturally apply to $\TL{ta}$ for any timed automata $ta$.
+% \end{alertblock}
+\end{slide}
+
+
+
+%-------------------------------------------------------------------------------
+\begin{frame}{Traces}
+\doExercise{Write 4 possible timed traces}{
+  \centering
+  % \includegraphics[width=7cm]{./images/lamp1.jpg}
+  \uppbox[7cm]{Lamp}{./images/Lamp}
+}
+\end{frame}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Traces}
+\small
+
+\begin{columns}
+\col{
+Given a \alert{timed trace} $tc$, the corresponding \structure{untimed trace} is $(\pi_2)^{\omega}\,  tc$.
+
+\begin{block}{Definition}
+\begin{itemize}
+\item two states $s_1$ and $s_2$ of a timed LTS are \structure{timed-language equivalent} if the \alert{set of finite timed traces}
+of  $s_1$ and $s_2$ coincide;
+\item ... similar definition for \structure{untimed-language equivalent} ...
+\end{itemize}
+\end{block}
+}
+
+\col{
+\doExercise{Why?}{\centering
+\begin{tabular}{cc}
+ % \includegraphics[width=2cm]{./images/tr1.jpg} &   %\hspace{1cm}
+ %  \includegraphics[width=2cm]{./images/tr2.jpg}
+ \uppbox[20mm]{LEQ}{./images/tr1} &   %\hspace{1cm}
+  \uppbox[20mm]{EQ}{./images/tr2}
+\end{tabular}
+\\[2mm]
+are not \structure{timed-language equivalent}
+% \\[2mm]
+% \visible<2>{$\pair{(0,t)}$ is not a trace of the TLTS generated by the second system.}
+
+}}
+\end{columns}
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Bisimulation}
+\small
+
+\begin{block}{Timed bisimulation (between states of timed LTS)}
+A relation $R$ is a \structure{timed simulation} iff whenever $s_1 R s_2$, for any action $a$ and delay $d$,
+\begin{align*}
+s_1\tran{a} s_1'\; & \imp\; \text{there is a transition}\; \; \; s_2 \tran{a} s_2' \land s_1' R s_2'\\
+s_1 \tran{d} s_1'\; & \imp\; \text{there is a transition}\; \; \; s_2 \tran{d} s_2' \land s_1' R s_2'
+\end{align*}
+And a \structure{timed bisimulation} if its converse is also a timed simulation.
+\end{block}
+\end{slide}
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Bisimulation}
+\small
+
+\begin{exampleblock}{Example}
+\centering
+% \wrap{\includegraphics[width=6cm]{./images/bis1.jpg}}
+\wrap{\uppbox[50mm]{W1-Z1}{./images/bis1.jpg}}
+~~~~
+\wrap{W1 bisimilar to Z1?}
+\end{exampleblock}
+
+\visible<2>{
+\vspace*{-6mm}
+\begin{align*}
+\pair{\pair{W1,\{x\mapsto 0\}}, \pair{Z1,\{x\mapsto 0\}} } \in R
+\end{align*}
+where
+\[\begin{array}{rlll}
+R \; =\;  & \{\pair{\pair{W1,\{x\mapsto d\}}&, \pair{Z1,\{x\mapsto d\}} } &|~d \in \R_0^+\}\; \;   \cup\\
+              & \{\pair{\pair{W2,\{x\mapsto d+1\}}&, \pair{Z2,\{x\mapsto d\}} } &|~ d \in \R_0^+\}\; \;  \cup\\
+              & \{\pair{\pair{W3,\{x\mapsto d\}}&, \pair{Z3,\{x\mapsto e\}} } &|~d,e \in \R_0^+\}  
+\end{array}\]
+}
+
+
+\end{slide}
+
+
+
+%----------------------------------------------------------------------------------
+\begin{slide}{Untimed Bisimulation}
+\small
+
+\begin{block}{Untimed bisimulation}
+A relation $R$ is an \structure{untimed simulation} iff whenever $s_1 R s_2$, for any action $a$ and delay $t$,
+\begin{align*}
+s_1 \tran{a} s_1' \; & \imp\; \text{there is a transition}\; \; \; s_2 \tran{a} s_2' \land s_1' R s_2'\\
+s_1 \tran{{\red{d}}} s_1'\; & \imp\; \text{there is a transition}\; \; \; s_2 \tran{{\red{d'}}} s_2' \land s_1' R s_2'
+\end{align*}
+And it is an \structure{untimed bisimulation} if its converse is also an untimed simulation.
+\end{block}
+~\\
+
+
+\alert{Alternatively, it can be defined over a modified LTS in which all delays are abstracted on a 
+unique, special transition labelled by $\epsilon$.}
+\end{slide}
+
+%----------------------------------------------------------------------------------
+% \begin{slide}{Untimed Bisimulation}
+% \small
+
+% \doExercise{W1 bisimilar to Z1?}{
+% \centering
+% \wrap{\includegraphics[height=3cm]{./images/bis2}}
+% % ~~~~
+% % \wrap{W1 bisimilar to Z1?}
+% }
+% \exerciseBack
+
+% \visible<2>{
+% \begin{align*}
+% \pair{\pair{W1,\{x\mapsto 0\}}, \pair{Z1,\{x\mapsto 0\}} } \in R
+% \end{align*}
+% where
+% \[\begin{array}{r@{~}l@{~}l@{~}l}
+% R \; =\;  & \{\pair{\pair{W1,\{x\mapsto d\}}&, \pair{Z1,\{x\mapsto d'\}} } &|~0\leq d \leq 1 , 0 \leq d' \leq 2 \}\; \;   \cup\\
+%       & \ldots
+%               % & \{\pair{\pair{W1,\{x\mapsto d\}}&, \pair{Z1,\{x\mapsto d'\}} } &|~ d>1, d'>2\}\; \;  \cup\\
+%               % & \{\pair{\pair{W2,\{x\mapsto d\}}&, \pair{Z2,\{x\mapsto d'\}} } &|~d,d' \in \R_0^+\}  
+% \end{array}\]
+% }
+
+
+% \end{slide}
+% \exerciseAdd
+
+
+
+\end{document}
