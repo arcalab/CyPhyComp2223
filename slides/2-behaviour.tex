@@ -213,7 +213,7 @@
    \end{tikzpicture}
 
    \doExercise{Value of $y$?}{
-    $int~x=0~;~ int~\alert{f()}\{ x+1; return~x;\}~~int~\alert{g()} \{x-1; return~x;\}~~ int~y = \alert{f()}+\alert{g()};$
+    $int~x=0~;~ int~\alert{f()}\{ x\texttt{++}; return~x;\}~~int~\alert{g()} \{x\texttt{-{-}}; return~x;\}~~ int~y = \alert{f()}\,\texttt{+}\,\alert{g()};$
    } 
 
    \vfill
