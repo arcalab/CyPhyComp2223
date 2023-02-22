@@ -1143,13 +1143,16 @@ The bisimilarity relation is an equivalence relation\\
   \begin{definition}
     Fix a functor $F$ and consider two transition systems
     $f : X \to F X$ and $g : Y \to F Y$. Two states $x \in X$, $y \in Y$
-    are observationally equivalent if there exists a relation
-    $R \subseteq X \times Y$ with $(x,y) \in R$ and there exists a
-    transition system $b : R \to FR$ such that the diagram below commutes
+    are \alert{observationally equivalent if}
+      \begin{itemize}
+         \item there exists \structure{a relation}
+      $\structure{R} \subseteq X \times Y$ with $(x,y) \in R$ and
+         \item there exists \structure{a transition system} $\structure{b} : R \to FR$ such that the diagram below commutes
+       \end{itemize} 
     \[
       \xymatrix{
-        X \ar[d]_{f} & \ar[l]_{\pi_1}  R \ar[r]^{\pi_2} \ar[d]_{b} & Y \ar[d]^{g} \\
-        F X  & \ar[l]^{F \pi_1} FR \ar[r]_{F \pi_2} & F Y
+        X \ar[d]_{f} & \ar[l]_{\pi_1}  \structure{R} \ar[r]^{\pi_2} \ar[d]_{\structure{b}} & Y \ar[d]^{g} \\
+        F X  & \ar[l]^{F \pi_1} \structure{FR} \ar[r]_{F \pi_2} & F Y
         }
     \]
     If such is the case we write \alert{$x \sim y$}  
@@ -1167,17 +1170,17 @@ The bisimilarity relation is an equivalence relation\\
 \end{frame}
 
 \begin{frame}{Observational Equivalence for Labelled Transition Systems}
-  Recall that we used systems of type $X \to \Pow(X)^L$ for establishing the
+  Recall that we used systems of type $X \to \Pow(X)^\Act$ for establishing the
   \alert{semantics} of \alert{CCS processes}. This means that \dots
 
   notions of observational behaviour/equivalence for such transition systems
   directly impact our concurrent language
 
-  \vfill Given $\overline{t_1} : X \to \Pow(X)^L$ and
-  $\overline{t_2} : Y \to \Pow(Y)^L$, $x \sim y$ iff for all $l \in L$
+  \vfill Given $\overline{t_1} : X \to \Pow(X)^\Act$ and
+  $\overline{t_2} : Y \to \Pow(Y)^\Act$, $x \sim y$ iff for all $l \in \Act$
   \begin{itemize}
-  \item $\forall x' \in t_1(x,l).\  \exists y' \in t_2(y,l).\ x' \sim y'$
-  \item $\forall y' \in t_2(y,l).\ \exists x' \in t_1(x,l).\ x' \sim y'$
+  \item $\forall x' \in t_1(x,n).\  \exists y' \in t_2(y,n).\ x' \sim y'$
+  \item $\forall y' \in t_2(y,n).\ \exists x' \in t_1(x,n).\ x' \sim y'$
   \end{itemize}
 \end{frame}
 
