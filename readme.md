@@ -48,9 +48,9 @@ At the end of the module, the student will:
 # Summaries
 
   - __14 feb. 2023__ – Introduction to the module and its dynamics ([slides](slides/1-intro.pdf))
-  - __17 feb. 2023__ - Formalising and reasoning over labelled transition systems ([slides](slides/2-behaviour.pdf))
-
-
+  - __21 feb. 2023__ - Formalising and reasoning over labelled transition systems ([slides](slides/2-behaviour.pdf))
+  - __28 feb. 2023__ - Equivalence of labelled transition systems ([slides](slides/2-behaviour.pdf))
+  - __3 mar. 2023__ - Introduction to Timed automata ([slides](slides/3-behaviour.pdf))
                                                                 
 
 
