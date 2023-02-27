@@ -1051,52 +1051,6 @@ q_1 \ar[r]^{a} & q_2  \ar[r]^{a}  & q_3  \ar[r]^{a} & \cdots & & h\ar@(ur,dr)[]^
 \end{slide}
 
 
-%----------------------------------------------------------------------------------
-\begin{slide}{Exercises}
-
-\doExercise{Check if there is a bisimulation that include $\pair{q_1,p_1}$}{
-\vspace*{-3mm}
-\begin{equation*}
-\xymatrix{
-& q_1  \ar[ld]_{a}  \ar[rd]^{a} & & & & p_1  \ar[d]^{a} \\
-q_2 \ar[d]^{c}  && q_3  \ar[d]^{c}  & && p_2  \ar[ld]_{c}  \ar[rd]^{c} & \\
-q_4 & & q_5 & &p_4 & & p_5\\
-% & q_1  \ar[ld]_{a}  \ar[rd]^{a} & & & & p_1  \ar[d]^{a} \\
-% q_2 \ar[d]^{\rdb{b}}  && q_3  \ar[d]^{c}  & && p_2  \ar[ld]_{\rdb{b}}  \ar[rd]^{c} & \\
-% q_4 & & q_5 & &p_4 & & p_5
-}
-\end{equation*}
-}
-\end{slide}
-
-
-\begin{slide}{Exercises}
-\doExercise{Check if there is a bisimulation that include $\pair{q_1,p_1}$}{
-\vspace*{-3mm}
-\begin{equation*}
-\xymatrix{
-% & q_1  \ar[ld]_{a}  \ar[rd]^{a} & & & & p_1  \ar[d]^{a} \\
-% q_2 \ar[d]^{c}  && q_3  \ar[d]^{c}  & && p_2  \ar[ld]_{c}  \ar[rd]^{c} & \\
-% q_4 & & q_5 & &p_4 & & p_5\\
-& q_1  \ar[ld]_{a}  \ar[rd]^{a} & & & & p_1  \ar[d]^{a} \\
-q_2 \ar[d]^{\rdb{b}}  && q_3  \ar[d]^{c}  & && p_2  \ar[ld]_{\rdb{b}}  \ar[rd]^{c} & \\
-q_4 & & q_5 & &p_4 & & p_5
-}  
-\end{equation*}
-}
-
-\doExercise{Check if there is a bisimulation that include $\pair{P,Q}$}{
-  \vspace*{-5mm}
-  \begin{align*}
-      P &= coin.(\ainv{coffee}.P + \ainv{tea}.P)
-      &
-      Q &= coin.\ainv{coffee}.Q + coin.\ainv{tea}.Q
-  \end{align*}
-}
-
-\end{slide}
-
-
 
 % Definition
 % p∼q ≡ ⟨∃R :: Risabisimulationand⟨p,q⟩∈R⟩
@@ -1136,6 +1090,63 @@ The bisimilarity relation is an equivalence relation\\
 
 
 
+%----------------------------------------------------------------------------------
+\begin{slide}{Exercises}
+
+\doExercise{Check if there is a bisimulation that include $\pair{q_1,p_1}$}{
+\vspace*{-3mm}
+\begin{equation*}
+\xymatrix{
+& q_1  \ar[ld]_{a}  \ar[rd]^{a} & & & & p_1  \ar[d]^{a} \\
+q_2 \ar[d]^{c}  && q_3  \ar[d]^{c}  & && p_2  \ar[ld]_{c}  \ar[rd]^{c} & \\
+q_4 & & q_5 & &p_4 & & p_5\\
+% & q_1  \ar[ld]_{a}  \ar[rd]^{a} & & & & p_1  \ar[d]^{a} \\
+% q_2 \ar[d]^{\rdb{b}}  && q_3  \ar[d]^{c}  & && p_2  \ar[ld]_{\rdb{b}}  \ar[rd]^{c} & \\
+% q_4 & & q_5 & &p_4 & & p_5
+}
+\end{equation*}
+}
+
+\doExercise{Check if there is a bisimulation that include $\pair{P,Q}$}{
+  \vspace*{-5mm}
+  \begin{align*}
+      P &= coin.(\ainv{coffee}.P + \ainv{tea}.P)
+      &
+      Q &= coin.\ainv{coffee}.Q + coin.\ainv{tea}.Q
+  \end{align*}
+}
+\end{slide}
+
+
+\begin{slide}{Exercises}
+\doExercise{Check if there is a bisimulation that include $\pair{q_1,p_1}$}{
+\vspace*{-3mm}
+\begin{equation*}
+\xymatrix{
+% & q_1  \ar[ld]_{a}  \ar[rd]^{a} & & & & p_1  \ar[d]^{a} \\
+% q_2 \ar[d]^{c}  && q_3  \ar[d]^{c}  & && p_2  \ar[ld]_{c}  \ar[rd]^{c} & \\
+% q_4 & & q_5 & &p_4 & & p_5\\
+& q_1  \ar[ld]_{a}  \ar[rd]^{a} & & & & p_1  \ar[d]^{a} \\
+q_2 \ar[d]^{\rdb{b}}  && q_3  \ar[d]^{c}  & && p_2  \ar[ld]_{\rdb{b}}  \ar[rd]^{c} & \\
+q_4 & & q_5 & &p_4 & & p_5
+}  
+\end{equation*}
+}
+
+\doExercise{Check if, for any process P}{
+  \vspace*{-5mm}
+  \begin{align*}
+      P ~\sim~ P + \cnil
+  \end{align*}
+}
+
+\end{slide}
+
+
+
+
+
+
 \section{Generalising Observational Equivalences}
 
 \begin{frame}{$F$-Transition Systems and Observational \underline{Equivalence}}
@@ -1159,7 +1170,7 @@ The bisimilarity relation is an equivalence relation\\
   \end{definition}
 \end{frame}
 
-\begin{frame}{Observational Equivalence for Moore Automata}
+\begin{frame}{Observational Equivalence for Moore Machine}
   Given $\pv{o_1}{n_1} : X \to A \times X$ and
   $\pv{o_2}{n_2} : Y \to A \times Y$ we obtain from the previous slide 
   that $x \sim y$ iff
