@@ -1,0 +1,60 @@
+\renewcommand\familydefault{\sfdefault}
+ 
+%input preamble and macros
+% \input{../slides/macros/preamble}
+\input{../slides/macros/macros}
+
+\usepackage{url}
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[capitalise]{cleveref}
+ 
+%\newcommand{\N}{\mathbb{N}}
+%\newcommand{\Z}{\mathbb{Z}}
+
+% Named environments (no counters) 
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+%\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+%\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{question}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+ 
+% Environments with counters
+\newtheoremstyle{myplain} {8mm}% ⟨Space above⟩
+{3mm}% ⟨Space below⟩
+{}% ⟨Body font⟩
+{}% ⟨Indent amount⟩
+{\bfseries\large}% ⟨Theorem head font⟩
+{.}% ⟨Punctuation after theorem head⟩
+{.5em}% ⟨Space after theorem head⟩2
+{}% ⟨Theorem head spec (can be left empty, meaning ‘normal’)⟩
+
+\theoremstyle{myplain}
+\newtheorem{myExercise}{Exercise}
+\crefname{myExercise}{Ex.}{Ex.}
+\Crefname{myExercise}{Ex.}{Ex.}
+
+
+\theoremstyle{definition} % no italics
+\newtheorem{subexercise}{}[myExercise]
+\crefname{subexercise}{Ex.}{Ex.}
+\Crefname{subexercise}{Ex.}{Ex.}
+
+\newcommand{\subex}[1]{\begin{subexercise}#1\end{subexercise}}
+
+
+\usepackage{enumitem} % enumeration with alpha and others - not needed for slides
+\usepackage{tcolorbox}
+\newcommand{\descrbox}[2]{
+\begin{tcolorbox}[fonttitle=\sffamily\bfseries\Large\center, title=#1]
+  {#2}
+\end{tcolorbox}
+}
+

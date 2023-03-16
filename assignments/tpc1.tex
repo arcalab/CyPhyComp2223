@@ -1,0 +1,131 @@
+\documentclass[11pt]{article}
+
+\usepackage{graphicx,amsmath}
+\usepackage{stmaryrd} % cf. interleave
+\usepackage{booktabs}
+\usepackage{amscd}
+\usepackage{multicol}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{alltt}
+\usepackage{proof}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usepackage[new]{old-arrows}
+\usepackage[all]{xy}
+\usepackage{pgfplots}
+\usepackage{textcomp}
+\usepackage{amssymb} % lesssim
+
+\input{macros}
+
+\date{Cyber-Physical Computation  2022/2023\\ \large TPC-1}
+
+\begin{document}
+ 
+% --------------------------------------------------------------
+%                         Start here
+% --------------------------------------------------------------
+ 
+\title{CCS and equivalences}
+\author{Jos\'{e} Proen\c{c}a \& Renato Neves
+\\
+pro@isep.ipp.pt \& nevrenato@di.uminho.pt}
+%\\
+%Arquitectura e C\'alculo -- 2015/2016} 
+ 
+\maketitle
+
+\descrbox{To do}{
+  Solve the exercises and produce a PDF with your answers. 
+}
+
+\descrbox{How to submit via email}{
+Please send it by email
+  (\texttt{pro@isep.ipp.pt}) with the name
+  ``\texttt{cpc2223-N.pdf}'', where ``\texttt{N}'' is your student
+  number.  The subject of the email should be ``\texttt{cpc2223 N
+    TPC-1}''.
+}
+
+\descrbox{Valorization questions}{
+  Questions marked with \underline{\textbf{[Hard]}} are valorization questions. These have very small marks when compared with the other questions and are meant to be more difficult.
+}
+
+\descrbox{Deadline}{
+  7 April 2023 @ 23:59 (Friday) 
+}
+
+
+
+\newcommand{\compn}[1]{\textsf{\textcolor{purple}{#1}}\xspace}
+\newcommand{\chn}[1]{\textsf{\textcolor{teal}{#1}}\xspace}
+
+\section*{CCS analysis}
+
+
+
+% \[\includegraphics[width=\textwidth]{RFID-conveyor.pdf}\]
+
+\begin{myExercise} \label{ex:procs}
+  For each of the CCS processes below, \textbf{draw} its transition system.
+   % and \emph{explain} informally what it does.
+  \subex{$A = a.b.0$}
+  \subex{$B = A + a.0$}
+  \subex{$C = (B || c.d.A)\backslash\{d\}$}
+\end{myExercise}
+
+\begin{myExercise}
+  Recall $A$ and $B$ processes from \cref{ex:procs}.
+  % Check if the following holds, and prove it:
+  \subex{\textbf{Prove} that $A \lesssim B$ or \textbf{explain} why not.}
+  \subex{\textbf{Prove} that $B \lesssim A$ or \textbf{explain} why not.}
+  \subex{\textbf{Prove} that $A \sim B$ or \textbf{explain} why not.}
+\end{myExercise}
+
+\begin{myExercise}
+  \underline{\textbf{[Hard]}} \textbf{Prove} that, for all CCS processes $P$ and $Q$: $$P+Q ~~\sim~~ Q+P$$ 
+\end{myExercise}
+
+
+\section*{CCS modelling}
+
+% \begin{myExercise} \label{ex:model}
+% Consider a system with 3 interacting processes -- \textbf{A}, \textbf{B}, and \textbf{V} -- such that:
+% \begin{itemize}
+%   \item A \textbf{V}ending machine repeatedly receives a \underline{coin}, and returns either a \underline{chocolate}, an \underline{apple}, or the \underline{coin} back.
+%   \item \textbf{A}lice repeatedly pays and gets \underline{chocolate}s;
+%   \item \textbf{B}ob repeatedly pays and gets \underline{apple}s and \underline{chocolate}s: after every 2 \underline{apple}s he gets a \underline{chocolate};
+% \end{itemize}
+%    \subex{ Specify this system using CCS.}
+%    \subex{ Draw its transition system.}
+% \end{myExercise}
+
+\begin{myExercise} \label{ex:model2}
+Consider the 5 components below.
+\begin{itemize}
+  \item \textbf{T}: A temperature sensor that periodically sends a \underline{temperature} value;
+  \item \textbf{H}: A humidity sensor that periodically sends a \underline{humidity} value;
+  \item \textbf{C}: A clock that sends a \underline{timestamp} with the current time;
+  \item \textbf{O}: An orchestrator that receives a \underline{temperature} value, followed by a \underline{humidity} value and  by a \underline{timestamp}, and in the end sends this \underline{data} package;
+  \item \textbf{D}: A display that receives \underline{data} from the orchestrator and \underline{display}s the content.
+\end{itemize}
+Consider each \underline{underlined} word above to be an action of our CSS processes.
+
+\subex{\textbf{Specify} each of these 5 components in CCS and \textbf{draw} their transition system.}
+\subex{\textbf{Specify} a new component \textbf{S} of this system, which composes the 5 components above in parallel, imposing synchronisation of all actions except \underline{display}.}
+\subex{\textbf{Propose} a variation of a similar system \textbf{S2} in CCS with no orchestrator. In this variation:
+\begin{enumerate}
+\item the humidity sensor informs the temperature sensor, then
+\item the temperature sensor informs the timestamp, then
+\item the timestamp sends the whole data to the display; and finally
+\item the display prompts the humidity sensor to restart the process.
+\end{enumerate}
+% I.e., that executes in parallel a variation of the components \textbf{T}, \textbf{H}, \textbf{C}, and \textbf{D}, which exchange messages am }
+}
+\subex{\underline{\textbf{[Hard]}} Experiment with the tool mCRL2 (\url{https://mcrl2.org}). Use it to \textbf{validate} your \textbf{S} and \textbf{S2} definitions above.}
+\end{myExercise}
+
+
+ 
+\end{document}

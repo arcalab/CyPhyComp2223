@@ -59,12 +59,14 @@ At the end of the module, the student will:
 
 # Assessment
 
-Assessment will consist of the following items:
+Assessment consist of the following items:
 
-+ Individual test (30%);
++ Two individual sets of exercises to do at home. 
+  * [TPC1 (15%)](assignments/tpc1-cpc.pdf)
+  * TPC2 (15% - not yet available) 
++ Individual test (30% - after all the lectures);
 + Group assignment: modelling and analysis of a cyber-physical system
-  via [Uppaal]([http://www.uppaal.org/]) and via [Haskell]([https://www.haskell.org/]) (40%);
-+ Two individual sets of exercises to do at home (15%+15%).
+  via [Uppaal]([http://www.uppaal.org/]) and via [Haskell]([https://www.haskell.org/]) (40% - not yet available);
 
 
 # Bibliography
