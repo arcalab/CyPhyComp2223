@@ -51,9 +51,11 @@ At the end of the module, the student will:
   - __21 feb. 2023__ - Formalising and reasoning over labelled transition systems ([slides-2](slides/2-behaviour.pdf))
   - __28 feb. 2023__ - Equivalence of labelled transition systems ([slides-2](slides/2-behaviour.pdf))
   - __3 mar. 2023__ - Exercises on equivalences; Introduction to Timed automata ([slides-3](slides/3-timed-automata.pdf))
-  - __14 mar. 2023__ - Formalisation of Timed automata and its composition ([slides-3](slides/3-timed-automata.pdf))
-  - __17 mar. 2023__ - Semantics and equivalence of Timed automata ([slides-3](slides/3-timed-automata.pdf))
-  - __17 mar. 2023__ - Compensation lecture: Introduction to UPPAAL model checker ([slides-4](slides/4-verification-uppaal.pdf))
+  - __14 mar. 2023__ - Formalisation of Timed Automata (TA) and its composition ([slides-3](slides/3-timed-automata.pdf))
+  - __17 mar. 2023__ - Exercises on the composition of TA; Semantics TA ([slides-3](slides/3-timed-automata.pdf))
+  - __21 mar. 2023__ - Semantics and equivalence of Timed automata ([slides-3](slides/3-timed-automata.pdf))
+  - __24 mar. 2023__ - Introduction to UPPAAL model checker ([slides-4](slides/4-verification-uppaal.pdf))
+  - __24 mar. 2023__ - Compensation lecture: Verification using CTL in UPPAAL ([slides-4](slides/4-verification-uppaal.pdf))
                                                                   
 
 
