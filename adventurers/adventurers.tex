@@ -1,0 +1,100 @@
+\documentclass[11pt]{article}
+
+%\renewcommand\familydefault{\sfdefault}
+ 
+%input preamble and macros
+\input{preamble}
+\input{macros}
+
+ 
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{hyperref}
+\usepackage[linewidth=1pt]{mdframed}
+%\newcommand{\N}{\mathbb{N}}
+%\newcommand{\Z}{\mathbb{Z}}
+
+% Named environments (no counters) 
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+%\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+%\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{question}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+ 
+% Environments with counters
+\newtheoremstyle{myplain} {5mm}% ⟨Space above⟩
+{3mm}% ⟨Space below⟩
+{}% ⟨Body font⟩
+{}% ⟨Indent amount⟩
+{\bfseries}% ⟨Theorem head font⟩
+{.}% ⟨Punctuation after theorem head⟩
+{.5em}% ⟨Space after theorem head⟩2
+{}% ⟨Theorem head spec (can be left empty, meaning ‘normal’)⟩
+
+\date{}
+
+\theoremstyle{myplain}
+\newtheorem{exercise}{Exercise}
+
+\theoremstyle{definition} % no italics
+\newtheorem{subexercise}{}[exercise]
+
+\newcommand{\subex}[1]{\begin{subexercise}#1\end{subexercise}}
+
+\begin{document}
+ 
+% --------------------------------------------------------------
+%                         Start here
+% --------------------------------------------------------------
+ 
+\title{The Adventurers' Problem}
+ 
+\maketitle
+
+\noindent
+In the middle of the night four adventurers encounter a shabby
+rope-bridge spanning a deep ravine. For safety reasons, they decide
+that no more than 2 people should cross the bridge at the same time
+and that a flashlight needs to be carried by one of them in every
+crossing.  They have only one flashlight. The 4 adventurers are not
+equally skilled: crossing the bridge takes them 1, 2, 5, and 10
+minutes, respectively. A pair of adventurers crosses the bridge in an
+amount of time equal to that of the slowest of the two adventurers.
+\begin{center}
+\includegraphics[scale=0.8]{images/ropebridge-diag}
+\end{center}
+One of the adventurers claims that they cannot be all on the other
+side in less than 19 minutes. One companion disagrees and claims that
+it can be done in 17 minutes. Your task it to verify these claims in
+\textsc{UPPAAL}\footnote{An animated description of the problem is
+  available
+  \href{https://www.youtube.com/watch?v=7yDmGnA8Hw0}{here}.}. Specifically,
+your task is to,
+\begin{enumerate}
+\item \underline{model} the system above using what you learned about
+  \underline{timed automata};
+\item express in \underline{\textsc{CTL}} that it is
+  \underline{possible} for all adventurers to be on the other side in
+  17 minutes;
+\item express in \underline{\textsc{CTL}} that it is
+  \underline{impossible} for all adventurers to be on the other side
+  in less than 17 minutes;
+\item test these formulae in \textsc{UPPAAL}.
+\end{enumerate}
+\bigskip
+\noindent
+Some hints to help you get started: the fact that only one person can
+carry the flashlight is a \underline{mutual exclusion problem}. 
+Do \underline{not} try to model the whole system with just one timed
+automaton. Instead use what you learned about parallel
+composition. We suggest one timed automaton for the flashlight and
+one timed automaton for each person.
+
+\end{document}
