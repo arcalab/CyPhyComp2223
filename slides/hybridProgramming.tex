@@ -1,0 +1,330 @@
+\documentclass{beamer}
+\usepackage{etex} % fixes new-dimension error
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[absolute,overlay]{textpos} % this is for textblock
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, calc, fit, tikzmark}
+\usepackage{pgfplots}
+\usepackage{multicol}
+\usepackage{proof}
+\usepackage{hyperref}
+\usepackage{array} % m in tabularalso
+
+
+%-------------- template --------------------------------------------------
+\usetheme{metropolis}
+\metroset{block=fill}
+%\usetheme{Boadilla}
+
+% Configuring the foot line
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.4\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertsection
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+% No configuration symbols
+\setbeamertemplate{navigation symbols}{}
+%----------------------------------------------------------------------------
+
+% context
+\AtBeginSection[]
+{
+    \begin{frame}
+        \frametitle{Table of Contents}
+        \tableofcontents[currentsection]
+    \end{frame}
+}
+\author[Renato Neves]{Renato Neves}
+% logos of institutions
+\titlegraphic{
+  \begin{textblock*}{5cm}(6.7cm,7.57cm)
+     \includegraphics[scale=0.05525]{images/uminho.png}
+  \end{textblock*}
+  \begin{textblock*}{5cm}(9.4cm,7.57cm)
+    \includegraphics[scale=0.50]{images/haslab.pdf}
+  \end{textblock*}
+}
+% No date
+\date{}
+
+
+%----------------------------------------------------------------------------
+\usepackage{graphicx,amsmath}
+\usepackage{stmaryrd} % cf. interleave
+\usepackage{booktabs}
+\usepackage{amscd}
+
+\usepackage{alltt}
+%------ using xy ------------------------------------------------------------
+\usepackage[all]{xy}
+%\def\larrow#1#2#3{\xymatrix{ #3 & #1 \ar[l] _-{#2} }}
+\def\larrow#1#2#3{\xymatrix{ #3 & #1 \ar[l] _--{#2} }}
+\def\rarrow#1#2#3{\xymatrix{ #1 \ar[r]^-{#2} & #3 }}
+\def\arLaw#1#2#3#4#5{
+\xymatrix{
+        #1      \ar@/^1pc/[rr]^-{#4} &
+        #5 &
+        #2      \ar@/^1pc/[ll]^-{#3}
+}}
+
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\begin{document}
+
+\title{Semantics for (Hybrid) Programming}
+
+\frame[plain]{\titlepage}
+
+\section{Overview}
+
+\begin{frame}{Last Lectures}
+       
+       Explored a simple language (\textsc{CCS}) and its semantics
+
+       Used it to model and analyse \alert{communicating} systems
+
+       Expanded our study to the \alert{timed} setting, via \textsc{UPPAAL}
+       
+       Used it to save us from zombies!
+
+\end{frame}
+
+\begin{frame}{Going Beyond the Timed Setting}
+        \begin{minipage}[0.3\textheight]{\textwidth}
+        \begin{columns}[c]
+                \begin{column}{0.45\textwidth}
+                \scalebox{0.6}{
+                  \begin{tikzpicture}
+                   \begin{axis}[width=10cm, height=4cm, x axis line style={}, grid =
+                     major, y axis line style={},
+                     title={\textbf{}}, xlabel={\tikzmark{y1}\tikzmark{y2}Sequence
+                     of events $\rightarrow$}, xtick =
+                     {0,1,2,3,4,5,6}, xmax=7, axis lines*=center,
+                     ytick={0,1,2,3,4,5,6},ylabel={},
+                     xlabel near ticks, ylabel near ticks] \addplot [color=black,
+                             only marks, domain = 0:5 ] 
+                             coordinates {(0.5,0) (1.3,1) (2,1) (3.4,1) 
+                             (4.2,3) (5.3,4) (6.2,3)};
+                   \end{axis}
+                  \end{tikzpicture}} 
+                \end{column}
+                \begin{column}{0.1\textwidth} 
+                        \hspace{0.5cm} \textbf{+}                
+                \end{column}
+                \begin{column}{0.50\textwidth} 
+                \scalebox{0.6}{ 
+                \begin{tikzpicture}
+                \begin{axis}[width=10cm, height=4cm, x axis line style={}, grid =
+                    major, y axis line style={},
+                     title={\textbf{}}, xlabel={\tikzmark{x1}\tikzmark{x2}Time $\rightarrow$}				, xtick = {0,1,2,3,4,5,6} , xmax=7, axis lines*=center,
+                     ytick={0,1,2,3,4,5,6}, ylabel={},
+                     xlabel near ticks, ylabel near ticks] \addplot [color=blue, smooth,
+                     domain = 0:5, fill = blue!40!white, opacity=0.4 ] coordinates {
+                     (0,0) (2,2) (4,4) (6,2) (8,4) (8,0)};
+                \end{axis}
+                \end{tikzpicture}}
+                \end{column}
+        \end{columns}
+        \end{minipage}
+
+        \vspace{1.5cm}
+        \begin{center}
+                Computational devices now interact with \alert{arbitrary}
+                physical processes (and not just time)
+        \end{center}
+
+        \begin{tikzpicture}[overlay,remember picture,
+box/.style = {rounded corners},
+pin edge={-Stealth,thick, red}]
+\coordinate (x1) at ($({pic cs:x1})+(-4ex, 1.5ex)$);
+\coordinate (x2) at ($({pic cs:x2})+(-5ex,-0.5ex)$);
+\node[semitransparent,
+     fit=(x1) (x2),
+     pin=below:\tiny{Described via differential equations}]  {};
+\end{tikzpicture} \begin{tikzpicture}[overlay,remember picture, box/.style
+= {rounded corners}, pin edge={-Stealth,thick, red}] \coordinate (y1) at
+     ($({pic cs:y1})+(-0.5ex, 1.5ex)$); \coordinate (y2) at ($({pic
+     cs:y2})+(-1.5ex,-0.5ex)$); \node[semitransparent, fit=(y1) (y2),
+     pin=below:\tiny{Described via classical methods of computation}]
+{};
+\end{tikzpicture}
+
+
+\end{frame}
+
+\begin{frame}{Which Language?}
+        This time we explore a simple \alert{imperative
+        language}
+
+        No concurrency, no communication, and no higher-order func.
+
+        (languages with such features are still underdeveloped)
+
+        Perhaps some of you would like to improve them :-)
+\end{frame}
+
+\begin{frame}{The Hybrid While-Language}
+        Fix a stock of variables $X = \{ \mathtt{x_1}, \dots , \mathtt{x_n}
+	\}$. Then we have,
+
+	\vspace{0.7cm}
+	\begin{block}{Linear Terms}
+	$\mathtt{LTerm}(X) \ni \tikzmark{r1}\mathtt{r}\tikzmark{r2} \mid \mathtt{r \cdot t}
+        \mid \mathtt{x}  \mid \mathtt{t + s }$
+	\end{block}
+
+	\vspace{0.7cm}
+	\begin{block}{Atomic Programs}
+	$\mathtt{At}(X) \ni \mathtt{x := t} \mid
+	\mathtt{x'_1 = t_1, \dots, x'_n = t_n \> \> \tikzmark{d1} \blue{for}\tikzmark{d2} 
+	\> \> t }$
+	\end{block}
+
+	\vspace{0.7cm}
+	\begin{block}{Hybrid Programs}
+	$\mathtt{Prog}(X) \ni \mathtt{a} \mid
+	\mathtt{p \> \blue{;} \> q} \mid
+	\mathtt{\blue{if} \> b \> \blue{then} \> p \> \blue{else} \> q} \mid
+	\mathtt{\blue{while} \> b \> \blue{do} \> \{ \> p \> \}}$
+	\end{block}
+
+	\begin{tikzpicture}[overlay,remember picture,
+	box/.style = {rounded corners},
+	pin edge={-Stealth,thick, red}]
+	\coordinate (r1) at ($({pic cs:r1})+(-0.2ex, 1.5ex)$);
+	\coordinate (r2) at ($({pic cs:r2})+(0.2ex,-0.5ex)$);
+	\node[semitransparent,
+	     fit=(r1) (r2),
+	     pin=below:\tiny{real number}]  {};
+	\end{tikzpicture}
+
+	\begin{tikzpicture}[overlay,remember picture,
+	box/.style = {rounded corners},
+	pin edge={-Stealth,thick, red}]
+	\coordinate (d1) at ($({pic cs:d1})+(-0.2ex, 1.5ex)$);
+	\coordinate (d2) at ($({pic cs:d2})+(0.2ex,-0.5ex)$);
+	\node[semitransparent,
+	     fit=(d1) (d2),
+	     pin=below:\tiny{"run" the system of differential 
+	     equations for $\mathtt{t}$ seconds}]  {};
+	\end{tikzpicture}
+
+\end{frame}
+
+\begin{frame}{Overview}
+
+        First we tackle a \alert{while-language}, without 
+        differential equations, and its semantics
+
+        Then we move to the hybrid case 
+        and see how the corresponding semantics helps the engineer analyse
+        hybrid programs
+
+        Throughout this journey, we will:
+        \begin{itemize}
+                \item write implementations in \textsc{Haskell}
+                \item do analysis in \textsc{Lince}
+        \end{itemize}
+\end{frame}
+
+\section{Semantics for Linear Terms}
+
+\begin{frame}{A Language of Linear Terms and its Semantics}
+
+        \begin{block}{Linear Terms}
+	$\mathtt{LTerm}(X) \ni \mathtt{r} \mid \mathtt{r \cdot t}
+        \mid \mathtt{x}  \mid \mathtt{t + s }$
+	\end{block}
+
+        Let $\sigma : X \to \mathbb{R}$ be an \alert{environment}, i.e. a
+        memory on which the program performs computations
+
+        The expression $\langle \mathtt{t},\sigma \rangle \Downarrow
+        \mathtt{r}$ says that the linear expression $\mathtt{t}$ outputs
+        $\mathtt{r}$ if the current memory is $\sigma$
+
+        \[
+                \infer[(\text{var})]{\langle \mathtt{x}, \sigma \rangle 
+                \Downarrow \sigma(\mathtt{x})}{} \qquad \qquad
+                \infer[(\text{con})]{\langle \mathtt{r}, \sigma \rangle 
+                \Downarrow \mathtt{r}}{}
+        \] \vspace{0.1cm}        
+        \[        
+                \infer[(\text{scl})]{  
+                        \langle \mathtt{s} \cdot \mathtt{t}, \sigma \rangle \Downarrow 
+                        \mathtt{s \cdot r}
+                        }{
+                        \langle \mathtt{t}, \sigma \rangle \Downarrow \mathtt{r}
+                } \qquad \qquad
+                \infer[(\text{add})]{  
+                        \langle \mathtt{t_1} + \mathtt{t_2}, \sigma \rangle \Downarrow 
+                        \mathtt{r_1 + r_2}
+                        }{
+                        \langle \mathtt{t_1}, \sigma \rangle \Downarrow \mathtt{r_1} \qquad
+                        \langle \mathtt{t_2}, \sigma \rangle \Downarrow \mathtt{r_2}
+                }
+        \]
+\end{frame}        
+
+\begin{frame}{The Semantics at Work}
+        The linear term $\mathtt{x + 2 \cdot y}$ corresponds to the tree 
+        \[
+                \xymatrix@C=10pt@R=10pt{
+                        & (+) \ar[dl] \ar[dr]  & \\
+                        \mathtt{x} & & \mathtt{(2\ \cdot)} \ar[d] \\
+                        & & \mathtt{y} 
+                }
+        \]
+
+        Consider an environment $\sigma$ such that $\sigma(\mathtt{x}) = 3$ and 
+        $\sigma(\mathtt{y}) = 4$. We can then build the following derivation tree: 
+        \[
+                \infer{\langle \mathtt{ x + 2 \cdot y}, \sigma \rangle \Downarrow 
+                \mathtt{11} }{
+                        \langle \mathtt{x}, \sigma \rangle \Downarrow \mathtt{3} 
+                        \qquad \qquad
+                        \infer{\langle \mathtt{2 \cdot y}, \sigma \rangle \Downarrow 8}{
+                        \langle \mathtt{y}, \sigma \rangle \Downarrow 4}
+                }
+        \]
+\end{frame}
+
+\begin{frame}{Exercises}
+        \begin{itemize}
+                \item $\langle \mathtt{2 \cdot x + 2 \cdot y}, \sigma \rangle \Downarrow$ ? 
+                \item $\langle \mathtt{3 \cdot (2 \cdot x) + 2 \cdot (y + z)}, 
+                        \sigma \rangle \Downarrow$ ? 
+        \end{itemize}
+
+        \pause
+        Boring computations? If so why not implement the semantics in \textsc{Haskell}?
+\end{frame}
+
+\begin{frame}{Equivalence of Linear Terms}
+        The previous semantics yields the following notion of 
+        \alert{equivalence}: $\mathtt{t} \sim \mathtt{s}$ if for all
+        environments $\sigma$
+        \begin{flalign*}
+                \langle \mathtt{t}, \sigma \rangle \Downarrow \mathtt{r} 
+                \text{ iff } \langle \mathtt{s}, \sigma \rangle \Downarrow \mathtt{r}
+        \end{flalign*}
+
+        Examples of equivalent terms:
+        \begin{itemize}
+                \item $\mathtt{r \cdot (x + y)} \sim \mathtt{r \cdot x + r \cdot y}$
+                \item $\mathtt{0 \cdot x} \sim \mathtt{0}$
+                \item $\mathtt{(r \cdot s) \cdot x} \sim \mathtt{r \cdot (s \cdot x)}$ ?
+        \end{itemize}
+\end{frame}
+
+\end{document}
