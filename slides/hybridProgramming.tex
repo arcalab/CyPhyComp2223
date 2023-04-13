@@ -223,17 +223,18 @@ pin edge={-Stealth,thick, red}]
 
 \begin{frame}{Overview}
 
-        First we tackle a \alert{while-language}, without 
-        differential equations, and its semantics
+        First we tackle a \alert{while-language} without 
+        differential equations and its semantics
 
         Then we move to the hybrid case 
-        and see how the corresponding semantics helps the engineer analyse
+        and see how the corresponding semantics helps the engineer to
+        analyse
         hybrid programs
 
         Throughout this journey, we will:
         \begin{itemize}
                 \item write implementations in \textsc{Haskell}
-                \item do analysis in \textsc{Lince}
+                \item do analyses in \textsc{Lince}
         \end{itemize}
 \end{frame}
 
@@ -250,7 +251,7 @@ pin edge={-Stealth,thick, red}]
         memory on which the program performs computations
 
         The expression $\langle \mathtt{t},\sigma \rangle \Downarrow
-        \mathtt{r}$ says that the linear expression $\mathtt{t}$ outputs
+        \mathtt{r}$ tells that the linear expression $\mathtt{t}$ outputs
         $\mathtt{r}$ if the current memory is $\sigma$
 
         \[
@@ -307,6 +308,7 @@ pin edge={-Stealth,thick, red}]
         \end{itemize}
 
         \pause
+        \vfill
         Boring computations? If so why not implement the semantics in \textsc{Haskell}?
 \end{frame}
 
@@ -325,6 +327,191 @@ pin edge={-Stealth,thick, red}]
                 \item $\mathtt{0 \cdot x} \sim \mathtt{0}$
                 \item $\mathtt{(r \cdot s) \cdot x} \sim \mathtt{r \cdot (s \cdot x)}$ ?
         \end{itemize}
+\end{frame}
+
+\section{Semantics for Boolean Terms}
+
+\begin{frame}{A Language of Boolean Terms and its Semantics}
+
+        \begin{block}{Boolean Terms}
+        $\mathtt{BTerm}(X) \ni \mathtt{t_1 \leq t_2} \mid \mathtt{b \wedge c}
+        \mid \mathtt{\neg b}$
+	\end{block}
+
+        \pause
+        The expression $\langle \mathtt{b},\sigma \rangle \Downarrow
+        \mathtt{v}$ says that the Boolean term $\mathtt{b}$ outputs
+        $\mathtt{v}$ if the current memory is $\sigma$
+
+        \[
+                \infer[(\text{leq})]
+                { 
+                        \langle \mathtt{t_1 \leq t_2}, \sigma \rangle \Downarrow \mathtt{tt} 
+                }
+                {
+                        \langle \mathtt{t_1}, \sigma \rangle \Downarrow \mathtt{r_1} \qquad
+                        \langle \mathtt{t_2}, \sigma \rangle \Downarrow \mathtt{r_2}
+                        \qquad \mathtt{r_1 \leq r_2}
+                } 
+        \] 
+        \[
+                \infer[(\text{gtr})]
+                { 
+                        \langle \mathtt{t_1 \leq t_2}, \sigma \rangle \Downarrow \mathtt{ff} 
+                }
+                {
+                        \langle \mathtt{t_1}, \sigma \rangle \Downarrow \mathtt{r_1} \qquad
+                        \langle \mathtt{t_2}, \sigma \rangle \Downarrow \mathtt{r_2}
+                        \qquad \mathtt{r_1 \not \leq r_2}
+                }
+        \]
+        \[        
+                \infer[(\text{not})]{  
+                        \langle \mathtt{\neg \mathtt{b}}, \sigma \rangle \Downarrow 
+                        \mathtt{\neg v}
+                        }{
+                        \langle \mathtt{b}, \sigma \rangle \Downarrow \mathtt{v}
+                } \qquad \qquad
+                \infer[(\text{and})]{  
+                        \langle \mathtt{b_1} \wedge \mathtt{b_2}, \sigma \rangle \Downarrow 
+                        \mathtt{v_1 \wedge v_2}
+                        }{
+                        \langle \mathtt{b_1}, \sigma \rangle \Downarrow \mathtt{v_1} \qquad
+                        \langle \mathtt{b_2}, \sigma \rangle \Downarrow \mathtt{v_2}
+                }
+        \]
+\end{frame}        
+
+\section{Semantics for While Programs}
+
+\begin{frame}{A While-language and its Semantics}
+	\begin{block}{While-Programs}
+	        $\mathtt{Prog}(X) \ni \mathtt{x := t} \mid
+	        \mathtt{p \> \blue{;} \> q} \mid
+	        \mathtt{\blue{if} \> b \> \blue{then} \> p \> \blue{else} \> q} \mid
+	        \mathtt{\blue{while} \> b \> \blue{do} \> \{ \> p \> \}}$
+        \end{block} \vspace{-0.4cm}
+        \[
+                \infer[(\text{asg})]{
+                        \langle \mathtt{x := t}, \sigma \rangle \Downarrow 
+                        \sigma[\mathtt{r} / \mathtt{x}]
+                }{
+                       \langle \mathtt{t}, \sigma \rangle \Downarrow \mathtt{r}
+                } \hspace{1cm}
+                \infer[(\text{seq})]{
+                        \langle \mathtt{p \> \blue{;} \> q}, \sigma \rangle \Downarrow \sigma''
+                }{
+                        \langle \mathtt{p}, \sigma \rangle \Downarrow \sigma' \qquad
+                        \langle \mathtt{q}, \sigma' \rangle \Downarrow \sigma'' 
+                }
+        \]\vspace{0.001cm}
+        \[\hspace{-0.6cm}
+                \infer[(\text{if1})]{
+                        \langle \mathtt{\blue{if} \> b \> \blue{then} \> \> p \> \blue{else} \> q}, 
+                        \sigma \rangle \Downarrow \sigma'
+                }{
+                        \langle \mathtt{b}, \sigma \rangle \Downarrow \mathtt{tt} \qquad
+                        \langle \mathtt{p}, \sigma \rangle \Downarrow \sigma'
+                } \hspace{1cm} 
+                \infer[(\text{if2})]{
+                        \langle \mathtt{\blue{if} \> b \> \blue{then} \> \> p \> \blue{else} \> q}, 
+                        \sigma \rangle \Downarrow \sigma'
+                }{
+                        \langle \mathtt{b}, \sigma \rangle \Downarrow \mathtt{ff} \qquad
+                        \langle \mathtt{q}, \sigma \rangle \Downarrow \sigma'
+                } 
+        \]\vspace{0.001cm}
+        \[
+                \infer[(\text{wh1})]{
+                        \langle \mathtt{\blue{while} \> b \> \blue{do} \> \{ \> p \> \}}, \sigma \rangle
+                        \Downarrow \sigma''
+                }{
+                        \langle \mathtt{b}, \sigma \rangle \Downarrow \mathtt{tt} \qquad
+                        \langle \mathtt{p}, \sigma \rangle \Downarrow \sigma' \qquad
+                        \langle \mathtt{\blue{while} \> b \> \blue{do} \> \{ \> p \> \}}, \sigma'
+                        \rangle \Downarrow \sigma'' 
+                }
+        \]\vspace{0.001cm}
+        \[
+                \infer[(\text{wh2})]{
+                        \langle \mathtt{\blue{while} \> b \> \blue{do} \> \{ \> p \> \}}, \sigma \rangle
+                        \Downarrow \sigma
+                }{
+                        \langle \mathtt{b}, \sigma \rangle \Downarrow \mathtt{ff}
+                }
+        \]
+\end{frame}
+\begin{frame}{The Semantics at Work}
+        The program $\mathtt{x := x + 1 \> \blue{;} \> x := x + 2}$ corresponds to the tree 
+        \[
+                \xymatrix@C=10pt@R=10pt{
+                        & (\> ; \>) \ar[dl] \ar[dr]  & \\
+                        \mathtt{x := x + 1} & & \mathtt{x := x + 2} 
+                }
+        \]
+
+        Consider the environment $\sigma = x \mapsto 3$. 
+        We build the following derivation tree: 
+        \[
+                \infer{
+                        \langle \mathtt{ x := x + 1 \> \blue{;} \> x := x + 2 }, \mathtt{x \mapsto 3}
+                        \rangle \Downarrow \mathtt{x \mapsto 6}
+                }{
+                        \infer{
+                                \langle \mathtt{x := x +1}, \mathtt{x \mapsto 3} \rangle 
+                                \Downarrow \mathtt{x \mapsto 4}
+                        }{
+                                \langle \mathtt{x + 1}, \mathtt{x \mapsto 3} \rangle \Downarrow
+                                \mathtt{4}
+                        }\qquad \qquad                        
+                        \infer{
+                                \langle \mathtt{x := x + 2}, \mathtt{x \mapsto 4} \rangle 
+                                \Downarrow \mathtt{x \mapsto 6}
+                        }{
+                                \langle \mathtt{x + 2}, \mathtt{x \mapsto 4} \rangle \Downarrow
+                                \mathtt{6}
+                        }
+                }
+        \]
+\end{frame}
+
+\begin{frame}{Exercise}
+        \begin{itemize}
+                \item $\mathtt{x := 0 \> \blue{;} \> y := 1 \> \blue{;} \> 
+                                \blue{while} \> x \leq y \> \blue{do} \> \{ x : = x + y \> \blue{;} \>
+                        y := y + 1 \}} \Downarrow\ ?$
+        \end{itemize}
+\end{frame}
+
+\begin{frame}{Equivalence of While-Programs}
+        The previous semantics yields the following notion of 
+        \alert{equivalence}: $\mathtt{p} \sim \mathtt{q}$ if for all
+        environments $\sigma$
+        \begin{flalign*}
+                \langle \mathtt{p}, \sigma \rangle \Downarrow \mathtt{\sigma'} 
+                \text{ iff } \langle \mathtt{q}, \sigma \rangle \Downarrow \mathtt{\sigma'}
+        \end{flalign*}
+
+        Examples of equivalent terms:
+        \begin{itemize}
+                \item $\mathtt{x := x + 1 \> \blue{;} \> x := x + 2 } 
+                        \sim \mathtt{x := x + 3}$
+                \item $\mathtt{(p \> \blue{;} \> q) \> \blue{;} \> r} \sim 
+                        \mathtt{p \> \blue{;} \> (q \> \blue{;} \> r)}$
+        \end{itemize}
+\end{frame}
+
+\begin{frame}{Pause for Meditations}
+
+        We have just built and implemented our first progr. language
+        
+        Note that we used its semantics to \alert{run} our programs and also to
+        \alert{prove} properties about them
+
+        Which features would you like to add to this language next? Probabilistic
+        operations or perhaps concurrency?
+        
+        Next step: add \alert{differential operations}
 \end{frame}
 
 \end{document}
