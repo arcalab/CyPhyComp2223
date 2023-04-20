@@ -59,7 +59,9 @@ At the end of the module, the student will:
   - __31 mar. 2023__ - Verification using CTL in UPPAAL ([slides-4](slides/4-verification-uppaal.pdf))
   - __31 mar. 2023__ - Compensation lecture: modelling adventurers on a bridge ([Instructions](adventurers/adventurers.pdf)) ([My solution](adventurers/adventurers.xml))
   - __11 apr. 2023__ - Operational semantics of simple languages. Recalling Haskell ([Slides](slides/hybridProgramming.pdf)) ([Code](slides/lectureCPC.hs))
-
+  - __14 apr. 2023__ - Implementations of different semantics in
+ Haskell ([Code](code.zip))
+  - __18 apr. 2023__ - Introduction to hybrid semantics ([Slides](slides/hybridProgramming.pdf))
 
 # Assessment
 

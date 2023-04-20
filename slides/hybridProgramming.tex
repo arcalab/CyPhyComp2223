@@ -513,5 +513,309 @@ pin edge={-Stealth,thick, red}]
         
         Next step: add \alert{differential operations}
 \end{frame}
+\section{Semantics for Hybrid-while Programs}
+\begin{frame}{Preliminaries about Differential Equations}
+        Consider a stock $\mathcal{X} = \{ \mathtt{x_1}, \dots, \mathtt{x_n} \}$ of
+        variables
+
+        Systems of differential equations $\mathtt{x'_1 = t_1, \dots, x'_n =
+        t_n}$ always have unique \alert{solutions}
+        \[
+                \tikzmark{sol1} \phi \tikzmark{sol2}: 
+                \mathbb{R}^n \times [0,\infty) \longrightarrow \mathbb{R}^n
+        \]
+
+        \vspace{1cm}
+        \begin{example}[The Continuous Dynamics of a Vehicle]
+                $\mathtt{p' = v, v' = a}$ which admits the solution 
+                \[
+                        \phi((x_0,v_0),t) = \left (x_0 + v_0 t + 
+                        \textstyle{\frac{1}{2}}a t^2, v_0 + at \right )
+                \]
+        \end{example}
+
+	\begin{tikzpicture}[overlay,remember picture,
+	box/.style = {rounded corners},
+	pin edge={-Stealth,thick, red}]
+	\coordinate (sol1) at ($({pic cs:sol1})+(-0.2ex, 1.5ex)$);
+	\coordinate (sol2) at ($({pic cs:sol2})+(0.2ex,-0.5ex)$);
+	\node[semitransparent,
+	     fit=(sol1) (sol2),
+	     pin=below:\tiny{Systematically obtained via linear algebra tools}]  {};
+	\end{tikzpicture}
+
+\end{frame}
+
+\begin{frame}{Conventions}
+
+        We will often abbreviate a list $v_1,\dots,v_n$ simply to $\overline{v}$
+
+        $\sigma[\overline{v}/\overline{x}]$ denotes the environment that maps
+        each $x_i$ in $\overline{x}$ to $v_i$ in $\overline{v}$ and all other
+        variables the same way as $\sigma$
+
+        \begin{example}
+                \[
+                        \sigma[v_1,v_2/x_1,x_2](y) = \begin{cases}
+                                v_1 & \text{ if } y = x_1 \\
+                                v_2 & \text{ if } y = x_2 \\
+                                \sigma(y) & \text{ otherwise }
+                        \end{cases}
+                \]
+        \end{example}
+
+        We will often treat an environment $\sigma : \{ \mathtt{x_1}, \dots, \mathtt{x_n} \}
+        \to \mathbb{R}$ as a list $[\sigma(\mathtt{x_1}), \dots, \sigma(\mathtt{x_n})]$
+\end{frame}
+
+\begin{frame}{The Hybrid While-Language and \dots}
+        Fix a stock of variables $X = \{ \mathtt{x_1}, \dots , \mathtt{x_n}
+	\}$. Then we have,
+
+	\vspace{0.7cm}
+	\begin{block}{Linear Terms}
+	$\mathtt{LTerm}(X) \ni \tikzmark{r1}\mathtt{r}\tikzmark{r2} \mid \mathtt{r \cdot t}
+        \mid \mathtt{x}  \mid \mathtt{t + s }$
+	\end{block}
+
+	\vspace{0.7cm}
+	\begin{block}{Atomic Programs}
+	$\mathtt{At}(X) \ni \mathtt{x := t} \mid
+	\mathtt{x'_1 = t_1, \dots, x'_n = t_n \> \> \tikzmark{d1} \blue{for}\tikzmark{d2} 
+	\> \> t }$
+	\end{block}
+
+	\vspace{0.7cm}
+	\begin{block}{Hybrid Programs}
+	$\mathtt{Prog}(X) \ni \mathtt{a} \mid
+	\mathtt{p \> \blue{;} \> q} \mid
+	\mathtt{\blue{if} \> b \> \blue{then} \> p \> \blue{else} \> q} \mid
+	\mathtt{\blue{while} \> b \> \blue{do} \> \{ \> p \> \}}$
+	\end{block}
+
+	\begin{tikzpicture}[overlay,remember picture,
+	box/.style = {rounded corners},
+	pin edge={-Stealth,thick, red}]
+	\coordinate (r1) at ($({pic cs:r1})+(-0.2ex, 1.5ex)$);
+	\coordinate (r2) at ($({pic cs:r2})+(0.2ex,-0.5ex)$);
+	\node[semitransparent,
+	     fit=(r1) (r2),
+	     pin=below:\tiny{real number}]  {};
+	\end{tikzpicture}
+
+	\begin{tikzpicture}[overlay,remember picture,
+	box/.style = {rounded corners},
+	pin edge={-Stealth,thick, red}]
+	\coordinate (d1) at ($({pic cs:d1})+(-0.2ex, 1.5ex)$);
+	\coordinate (d2) at ($({pic cs:d2})+(0.2ex,-0.5ex)$);
+	\node[semitransparent,
+	     fit=(d1) (d2),
+	     pin=below:\tiny{"run" the system of differential 
+	     equations for $\mathtt{t}$ seconds}]  {};
+	\end{tikzpicture}
+\end{frame}
+
+\begin{frame}{ \dots\ its semantics }
+        The evaluation of programs is now \alert{time-dependent}
+        \[
+                \langle \mathtt{p}, \sigma, \alert{t} \rangle \Downarrow \sigma'
+        \]
+        \dots\ different time instants, different outputs
+
+        \textsc{Lince} relies on such a semantics: evaluating
+        $\langle \mathtt{p}, \sigma, t_i \rangle$ for a "big"
+        sequence $t_1, \dots, t_k$ results in a trajectory, such as
+
+        \begin{center}
+                \includegraphics[scale=.22]{./images/traj.png}
+        \end{center}
+\end{frame}
+
+\begin{frame}{The Semantic Rules pt. I}
+        \[
+                \infer{
+                        \langle \overline{\mathtt{x}}' = \overline{\mathtt{t}} \> 
+                        \blue{\mathtt{for}} \> \mathtt{s}, \sigma, t \rangle
+                        \Downarrow \mathtt{stop}, \sigma[\phi(\sigma,t)/\overline{x}]
+                }{
+                        \langle \mathtt{s}, \sigma \rangle \Downarrow \mathtt{r}
+                        \qquad t < \mathtt{r}
+                }
+        \]
+
+        \[
+                \infer{
+                        \langle \overline{\mathtt{x}}' = \overline{\mathtt{t}} \> 
+                        \blue{\mathtt{for}} \> \mathtt{s}, \sigma, t \rangle
+                        \Downarrow \mathtt{skip}, \sigma[\phi(\sigma,t)/\overline{x}]
+                }{
+                        \langle \mathtt{s}, \sigma \rangle \Downarrow \mathtt{r}
+                        \qquad t = \mathtt{r}
+                }
+        \]
+
+        \[
+                \infer[]{
+                        \langle \mathtt{x := t}, \sigma,0 \rangle \Downarrow 
+                        \sigma[\mathtt{r} / \mathtt{x}]
+                }{
+                       \langle \mathtt{t}, \sigma \rangle \Downarrow \mathtt{r}
+                } \hspace{1cm}
+                \infer[]{
+                        \langle \mathtt{p \> \blue{;} \> q}, \sigma, t \rangle \Downarrow 
+                        \mathtt{stop}, \sigma'
+                }{
+                        \langle \mathtt{p}, \sigma, t \rangle \Downarrow \mathtt{stop}, \sigma' 
+                }
+        \]
+
+        \[
+                \infer[]{
+                        \langle \mathtt{p \> \blue{;} \> q}, \sigma, t + t' \rangle \Downarrow 
+                        \mathtt{s}, \sigma''
+                }{
+                        \langle \mathtt{p}, \sigma, t \rangle \Downarrow \mathtt{skip}, \sigma' 
+                        \qquad
+                        \langle \mathtt{q}, \sigma, t' \rangle \Downarrow \mathtt{s}, \sigma''
+                }
+        \]
+\end{frame}
+
+\begin{frame}{Examples}
+        \scriptsize
+        \[
+                \infer{
+                        \langle (\mathtt{x' = 0} \> \mathtt{\blue{for}} \> 1) \>
+                        \blue{\mathtt{;}} \> (\mathtt{x' = 1} \> \mathtt{\blue{for}} \> 1),
+                        (\mathtt{x} \mapsto 2), \frac{1}{2} \rangle \Downarrow
+                        \mathtt{stop}, (\mathtt{x} \mapsto 2) \tikzmark{no1} \tikzmark{no2}
+                }{
+                        \infer{ 
+                                \langle \mathtt{x' = 0} \> \mathtt{\blue{for}} \> 1,
+                                (\mathtt{x} \mapsto 2), \frac{1}{2} \rangle \Downarrow
+                                \mathtt{stop}, (\mathtt{x} \mapsto 2) 
+                        }{
+                                \langle 1, (\mathtt{x} \mapsto 2) \rangle \Downarrow 1
+                                \qquad
+                                \frac{1}{2} < 1
+                        }
+                }
+        \]         
+        
+        \vspace{0.8cm}
+        \[      \hspace{-0.5cm}
+                \infer{
+                        \langle (\mathtt{x' = 0} \> \mathtt{\blue{for}} \> 1) \>
+                        \blue{\mathtt{;}} \> (\mathtt{x' = 1} \> \mathtt{\blue{for}} \> 1),
+                        (\mathtt{x} \mapsto 2), 1 + \frac{1}{2} \rangle \Downarrow
+                        \mathtt{stop}, \tikzmark{so1} (\mathtt{x} \mapsto 2 + \frac{1}{2}) 
+                        \tikzmark{so2}
+                }{
+                        \infer{ 
+                                \langle \mathtt{x' = 0} \> \mathtt{\blue{for}} \> 1,
+                                (\mathtt{x} \mapsto 2), 1 \rangle \Downarrow
+                                \mathtt{skip}, (\mathtt{x} \mapsto 2) 
+                        }{
+                                \cdots                        
+                        }
+                        \qquad
+                        \infer{
+                                \langle \mathtt{x' = 1} \> \mathtt{\blue{for}} \> 1,
+                                (\mathtt{x} \mapsto 2), \frac{1}{2} \rangle \Downarrow
+                                \mathtt{stop}, (\mathtt{x} \mapsto 2 + \frac{1}{2})
+                        }{
+                                \cdots 
+                        }
+                }
+        \]
+        \begin{tikzpicture}[overlay,remember picture,
+                box/.style = {rounded corners},
+                pin edge={-Stealth,thick, red}]
+                \coordinate (no1) at ($({pic cs:no1})+(-4ex, 1.5ex)$);
+                \coordinate (no2) at ($({pic cs:no2})+(-5ex,-0.5ex)$);
+                \node[semitransparent,
+                        fit=(no1) (no2),
+                        pin=below:\tiny{$= (\mathtt{x} \mapsto 2)
+                        [\phi(2,\textstyle{\frac{1}{2}})/\mathtt{x}]$}]  {};
+        \end{tikzpicture}
+        \begin{tikzpicture}[overlay,remember picture,
+                box/.style = {rounded corners},
+                pin edge={-Stealth,thick, red}]
+                \coordinate (so1) at ($({pic cs:so1})+(-4ex, 1.5ex)$);
+                \coordinate (so2) at ($({pic cs:so2})+(-5ex,-0.5ex)$);
+                \node[semitransparent,
+                        fit=(so1) (so2),
+                        pin=below:\tiny{$= (\mathtt{x} \mapsto 2)
+                        [\phi(2,\textstyle{\frac{1}{2}})/\mathtt{x}]
+                        = (\mathtt{x} \mapsto 2)
+                        [2 + \textstyle{\frac{1}{2}}/\mathtt{x}] 
+                        = x \mapsto 2 + \textstyle{\frac{1}{2}}$}]  {};
+        \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Exercise}
+        $\langle (\mathtt{x' = 1} \> \mathtt{\blue{for}} \> 1) \>
+                        \blue{\mathtt{;}} \> (\mathtt{x' = -1} \> \mathtt{\blue{for}} \> 1),
+                        (\mathtt{x} \mapsto 5), 2 \rangle \Downarrow\ ?$ 
+
+\end{frame} 
+\begin{frame}{The Semantic Rules pt. II}
+        \[\hspace{-0.4cm}
+                \infer[]{
+                        \langle \mathtt{\blue{if} \> b \> \blue{then} \> \> p \> \blue{else} \> q}, 
+                        \sigma, t \rangle \Downarrow \mathtt{s}, \sigma'
+                }{
+                        \langle \mathtt{b}, \sigma \rangle \Downarrow \mathtt{tt} \qquad
+                        \langle \mathtt{p}, \sigma, t \rangle \Downarrow \mathtt{s}, \sigma'
+                } \hspace{0.5cm} 
+                \infer[]{
+                        \langle \mathtt{\blue{if} \> b \> \blue{then} \> \> p \> \blue{else} \> q}, 
+                        \sigma, t \rangle \Downarrow \mathtt{s}, \sigma'
+                }{
+                        \langle \mathtt{b}, \sigma \rangle \Downarrow \mathtt{ff} \qquad
+                        \langle \mathtt{q}, \sigma, t \rangle \Downarrow \mathtt{s}, \sigma'
+                } 
+        \]
+
+        \[
+                \infer[]{
+                        \langle \mathtt{\blue{while} \> b \> \blue{do} \> \{ \> p \> \}}, 
+                        \sigma, t \rangle \Downarrow \mathtt{s}, \sigma'
+                }{
+                        \langle \mathtt{b}, \sigma \rangle \Downarrow \mathtt{tt} \qquad
+                        \langle \mathtt{\mathtt{p} \> \blue{\mathtt{;}} \> 
+                        \blue{while} \> b \> \blue{do} \> \{ \> p \> \}}, \sigma, t
+                        \rangle \Downarrow \mathtt{s}, \sigma' 
+                }
+        \]\vspace{0.001cm}
+        \[
+                \infer[]{
+                        \langle \mathtt{\blue{while} \> b \> \blue{do} \> \{ \> p \> \}}, \sigma 
+                        , 0 \rangle \Downarrow \mathtt{skip},\sigma
+                }{
+                        \langle \mathtt{b}, \sigma \rangle\Downarrow  \mathtt{ff}
+                }
+        \]
+\end{frame}
+
+\begin{frame}{Equivalence of While-Programs}
+        The previous semantics yields the following notion of 
+        \alert{equivalence}: $\mathtt{p} \sim \mathtt{q}$ if for all
+        environments $\sigma$ and time instants $t$,
+        \begin{flalign*}
+                \langle \mathtt{p}, \sigma, t \rangle \Downarrow \mathtt{s}, \mathtt{\sigma'} 
+                \text{ iff } \langle \mathtt{q}, \sigma, t \rangle \Downarrow \mathtt{s}, 
+                \mathtt{\sigma'}
+        \end{flalign*}
+
+        Examples of equivalent terms:
+        \begin{itemize}
+                \item $(\mathtt{x' = 1} \> \mathtt{\blue{for}} \> 1) \>
+                        \blue{\mathtt{;}} \> (\mathtt{x' = 1} \> \mathtt{\blue{for}} \> 1)
+                        \sim \mathtt{x' = 1} \> \mathtt{\blue{for}} \> 2$
+                \item $\mathtt{(p \> \blue{;} \> q) \> \blue{;} \> r} \sim 
+                        \mathtt{p \> \blue{;} \> (q \> \blue{;} \> r)}$
+        \end{itemize}
+\end{frame}
 
 \end{document}
