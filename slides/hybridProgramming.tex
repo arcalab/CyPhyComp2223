@@ -756,6 +756,12 @@ pin edge={-Stealth,thick, red}]
 \begin{frame}{Exercise}
         $\langle (\mathtt{x' = 1} \> \mathtt{\blue{for}} \> 1) \>
                         \blue{\mathtt{;}} \> (\mathtt{x' = -1} \> \mathtt{\blue{for}} \> 1),
+                        (\mathtt{x} \mapsto 5), \frac{1}{2} \rangle \Downarrow\ ?$ 
+
+                        \vspace{1cm}
+
+        $\langle (\mathtt{x' = 1} \> \mathtt{\blue{for}} \> 1) \>
+                        \blue{\mathtt{;}} \> (\mathtt{x' = -1} \> \mathtt{\blue{for}} \> 1),
                         (\mathtt{x} \mapsto 5), 2 \rangle \Downarrow\ ?$ 
 
 \end{frame} 
@@ -816,6 +822,136 @@ pin edge={-Stealth,thick, red}]
                 \item $\mathtt{(p \> \blue{;} \> q) \> \blue{;} \> r} \sim 
                         \mathtt{p \> \blue{;} \> (q \> \blue{;} \> r)}$
         \end{itemize}
+\end{frame}
+\section{A Zoo of Hybrid Programs}
+
+\begin{frame}{A Zoo of Hybrid Programs}
+
+        \begin{itemize}
+
+                \item Traffic lights
+
+                \item Cruise controller (speed regulation)
+
+                \item Landing system
+
+                \item \underline{Move a particle from A to B}
+
+                \item \underline{Follow the leader}
+        \end{itemize}
+
+\end{frame} 
+\begin{frame}{Analytical Testing and Following the Leader pt. I}
+  \begin{minipage}[0.3\textheight]{\textwidth}
+  \begin{columns}[c]
+  \begin{column}{0.45\textwidth}
+   \hspace{0.3cm}
+   \includegraphics[scale=0.38]{./images/fl1.png}
+  \end{column}
+  \begin{column}{1\textwidth}
+    \includegraphics[scale=0.3]{./images/fl_plot.png}
+  \end{column}
+  \end{columns}
+  \end{minipage}
+
+  \pause
+  Problem: Even if behind the leader in the next iteration, we might
+  generate a velocity so high that we won't brake in time
+\end{frame}
+
+\begin{frame}{Analytical Testing and Following the Leader pt. II}
+  \begin{minipage}[1\textheight]{\textwidth}
+  \begin{columns}[c]
+  \begin{column}{0.45\textwidth}
+          \hspace{0.4cm} 
+          \includegraphics[scale=0.32]{./images/newcode.png}
+  \end{column}
+  \begin{column}{1\textwidth}
+    \includegraphics[scale=0.3]{./images/newplot.png}
+  \end{column}
+  \end{columns}
+  \end{minipage}
+
+  \pause
+  \vspace{0.5cm}
+  The conditional now arises from \alert{solving} the equation for $t$
+  \[
+        x_0 + v_0t + \frac{1}{2}(-2)t^2 = y_0 + 10t\ 
+  \]
+  No solutions, means no collisions!!
+\end{frame}
+
+
+\section{Examples of what not to do}
+
+\begin{frame}{Checkpoint}
+        We saw how to \alert{analyse} hybrid programs \alert{formally}
+
+        We also visited a zoo of hybrid programs -- which improved our 
+        ability to recognise them in the wild
+
+        \pause
+        We now go over examples of what \alert{not} to do in hybrid
+        programming
+\end{frame}
+
+\begin{frame}{What \underline{not} to do}
+        Neglect:
+        \begin{itemize}
+                \item error accumulation or
+                \item analytical testing
+        \end{itemize}
+\end{frame}
+
+\begin{frame}{Error Accumulation and Particle Positioning}
+  \begin{minipage}[0.3\textheight]{\textwidth}
+  \begin{columns}[c]
+  \begin{column}{0.45\textwidth}
+   \hspace{0.3cm}
+   \includegraphics[scale=0.38]{./images/pp.png}
+  \end{column}
+  \begin{column}{1\textwidth}
+    \includegraphics[scale=0.3]{./images/zlochness.png}
+  \end{column}
+  \end{columns}
+  \end{minipage}
+
+  \vspace{1cm}
+  Q: What is the position of the particle the first time it stops?
+\end{frame}
+
+\begin{frame}{A Million-Dollar Question}
+        How to simulate a differential statement that \alert{terminates
+        as soon as} a certain \alert{event} occurs?  
+
+        \[
+                \mathtt{x}' = 1 \> \mathtt{\blue{until}} \> \mathtt{x = 2}
+        \]
+
+        \textbf{A:} No general solution for simulation with \alert{exact
+        precision}; and even approximated simulation raises problems :-( 
+        \[
+                (\mathtt{x}' = 1 \> \mathtt{\blue{until}} \> \mathtt{x = 2}) \> \>
+                \text{ collapses almost always to } \> \>
+                (\mathtt{x}' = 1 \> \mathtt{\blue{for}} \> \mathtt{\infty})
+        \]
+
+        \vfill
+        \pause
+        For this lecture we take a (naive) approach:
+        \[
+                (\overline{\mathtt{x}}' = \overline{\mathtt{t}} \>
+                \blue{\mathtt{until}}_\epsilon \> \mathtt{b}) \> \hat = \>
+                \blue{\mathtt{while}} \> \neg \mathtt{b} \> \{ \overline{\mathtt{x}}' 
+                = \overline{\mathtt{t}} \> \blue{\mathtt{for}} \> \epsilon \} 
+        \]
+        \end{frame}
+\begin{frame}{(Another) Zoo of Hybrid Programs}
+        \begin{itemize}
+                \item Bouncing Ball
+                \item Fireflies
+        \end{itemize}
+
 \end{frame}
 
 \end{document}
