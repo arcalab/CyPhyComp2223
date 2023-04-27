@@ -62,7 +62,7 @@ At the end of the module, the student will:
   - __14 apr. 2023__ - Implementations of different semantics in
  Haskell ([Code](code.zip))
   - __18 apr. 2023__ - Introduction to hybrid semantics ([Slides](slides/hybridProgramming.pdf))
-
+  - __28 apr. 2023__ - A zoo of hybrid programs ([Slides](slides/hybridProgramming.pdf))
 # Assessment
 
 Assessment consist of the following items:
