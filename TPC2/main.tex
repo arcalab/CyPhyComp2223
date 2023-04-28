@@ -1,0 +1,171 @@
+\documentclass[a4paper, 11pt]{article}
+
+%% packages
+\usepackage{fullpage} % changes the margin
+\usepackage{hyperref} % Links
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{braket}
+\usepackage{proof}
+\usepackage{fullpage}
+%%
+
+%% macros
+\newcommand{\complex}{\mathbb{C}}
+\newcommand{\vecs}{\mathcal{V}}
+\newcommand{\id}{\mathrm{id}}
+%% environments
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{examples}{Example}
+\newtheorem{exercises}{Exercises}
+\newtheorem{exercise}{Exercise}
+\newtheorem{postulate}{Postulate}
+\newtheoremstyle{sub}% name
+{2pt}        % Space above, empty = `usual value'
+{2pt}        % Space below
+{}              % Body font
+{}    % Indent amount (empty = no indent, \parindent = para indent)
+{}              % Thm head font
+{.}    % Punctuation after thm head
+{0.5em}         % Space after thm head: \newline = linebreak
+{{\thmname{#1}\thmnumber{ #2}}\thmnote{ (#3)}}  % Thm head spec
+\theoremstyle{sub}
+\newtheorem{subexercise}{Part}[exercise]
+\usepackage[linewidth=1pt]{mdframed}
+\newcommand{\conc}{\mathbin{+\mkern-08mu+}}
+
+%% config
+\date{}
+\linespread{1.10}
+%%
+
+\begin{document}
+
+\title{Cyber-Physical Programming\\ \large TPC-2}
+\author{Renato Neves \\ \scriptsize
+  \href{mailto:nevrenato@di.uminho.pt}{nevrenato@di.uminho.pt}}
+\maketitle
+
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+It is often necessary to incorporate \emph{message logs} in whatever
+programming language we are working with. For example, we might wish to register
+the speed of a car periodically. So let us consider the following simple,
+imperative programming language:
+\[
+        \mathtt{Prog}(X) \ni \mathtt{x\ \blue{:=}\ t} \mid
+        \mathtt{\blue{write_m}(p)} \mid
+	\mathtt{p \> \blue{;} \> q} \mid
+	\mathtt{\blue{if} \> b \> \blue{then} \> p \> \blue{else} \> q} \mid
+	\mathtt{\blue{while} \> b \> \blue{do} \> \{ \> p \> \}}
+\]
+Note that $\mathtt{t}$ is a linear term (defined in previous lectures) and
+$\mathtt{m}$ in the construct $\blue{\mathtt{write_m}}$ is a list of messages.
+The program $\mathtt{\blue{write_m}(p)}$ reads as ``write messages $\mathtt{m}$
+and then run program $\mathtt{p}$".  For such a language we take a semantics
+$\langle \mathtt{p}, \sigma \rangle \Downarrow m, \sigma'$ which informs not
+only of the output of $\mathtt{p}$ (i.e. $\sigma'$) but also presents a list of
+messages (i.e. $m$). Specifically, we adopt the following semantic rules:
+\begin{flalign*}
+        \infer[(\text{asg})]{
+                \langle \mathtt{x\ \blue{:=}\ t}, \sigma \rangle \Downarrow 
+                [\,], \sigma[\mathtt{r}/\mathtt{x}]
+        }{
+                \langle \mathtt{t}, \sigma \rangle \Downarrow \mathtt{r}
+                }
+        \hspace{2cm}
+        \infer[(\text{wait})]{
+                \langle \mathtt{\blue{wait_m}(p)}, \sigma \rangle
+                \Downarrow m \conc n, \sigma'
+        }{
+                \langle \mathtt{p}, \sigma \rangle \Downarrow n, \sigma'      
+                }
+\end{flalign*}
+\begin{flalign*}
+        \infer[(\text{seq})]{
+                \langle \mathtt{p\ \blue{;}\ q}, \sigma \rangle \Downarrow
+                m \conc n, \sigma'' 
+        }{
+                \langle \mathtt{p}, \sigma \rangle \Downarrow m, \sigma' 
+                \qquad
+                \langle \mathtt{q}, \sigma' \rangle \Downarrow n, \sigma''
+        }
+\end{flalign*}
+\begin{flalign*}
+        \infer[(\text{if$_1$})]{
+                \langle \mathtt{\blue{if} \> b \> \blue{then} \> \> p \> \blue{else} \> q}, 
+                \sigma \rangle \Downarrow m, \sigma'
+        }{
+                \langle \mathtt{b}, \sigma \rangle \Downarrow \mathtt{tt} \qquad
+                \langle \mathtt{p}, \sigma \rangle \Downarrow m, \sigma'
+        } \hspace{1cm} 
+        \infer[(\text{if$_2$})]{
+                \langle \mathtt{\blue{if} \> b \> \blue{then} \> \> p \> \blue{else} \> q}, 
+                \sigma \rangle \Downarrow m, \sigma'
+        }{
+                \langle \mathtt{b}, \sigma \rangle \Downarrow \mathtt{ff} \qquad
+                \langle \mathtt{q}, \sigma \rangle \Downarrow m, \sigma'
+        }
+\end{flalign*}
+\begin{flalign*}
+        \infer[(\text{wh$_1$})]{
+                \langle \mathtt{\blue{while} \> b \> \blue{do} \> \{ \> p \> \}}, \sigma \rangle
+                \Downarrow m \conc n, \sigma''
+        }{
+                \langle \mathtt{b}, \sigma \rangle \Downarrow \mathtt{tt} \qquad
+                \langle \mathtt{p}, \sigma \rangle \Downarrow m, \sigma' \qquad
+                \langle \mathtt{\blue{while} \> b \> \blue{do} \> \{ \> p \> \}}, \sigma'
+                \rangle \Downarrow n, \sigma'' 
+        }
+\end{flalign*}
+\begin{flalign*}
+        \infer[(\text{wh$_2$})]{
+                \langle \mathtt{\blue{while} \> b \> \blue{do} \> \{ \> p \> \}}, \sigma \rangle
+                \Downarrow [ \, ], \sigma
+        }{
+                \langle \mathtt{b}, \sigma \rangle \Downarrow \mathtt{ff}
+        }
+\end{flalign*}
+
+We can then define a natural notion of \emph{equivalence} for our programs: 
+we say that two programs \texttt{p} and \texttt{q} are equivalent 
+(in symbols, $\mathtt{p} \sim \mathtt{q}$) if for all environments $\sigma$ we have
+\[
+        \langle \mathtt{p}, \sigma \rangle \Downarrow m, \sigma' \text{ iff }
+        \langle \mathtt{q}, \sigma \rangle \Downarrow m, \sigma'
+\]
+
+\begin{exercise}
+        Prove that $\mathtt{\blue{write_m}(\blue{write_n}(p))} \sim  
+        \mathtt{\blue{write_{m \conc n}}(p)}$. Can you think of (and prove)
+        other interesting equivalences? Note that the more equivalences a compiler
+        knows the more ways it has to do program optimisations.
+\end{exercise}
+
+\begin{exercise}
+        Implement in \texttt{Haskell} the while-language described above and
+        its semantics. Suggestion: use the code developed in previous
+        lectures.
+\end{exercise}
+
+\begin{mdframed}
+  What to submit: A \texttt{.pdf} file containing the solution to
+  the first exercise and a also \texttt{.hs} file containing the code that you developed
+  (properly commented!) for the second exercise. Please send a corresponding
+  \texttt{.zip} archive by email
+  (\texttt{nevrenato@di.uminho.pt}) with the name
+  ``\texttt{cpp2223-N.zip}'', where ``\texttt{N}'' is your student
+  number.  The subject of the email should be ``\texttt{cpp2223 N
+    TPC-2}''.
+\end{mdframed}
+
+
+
+%% Bibliography
+\bibliographystyle{alpha}
+\bibliography{biblioTeaching}
+
+\end{document}
