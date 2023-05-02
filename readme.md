@@ -63,6 +63,7 @@ At the end of the module, the student will:
  Haskell ([Code](code.zip))
   - __18 apr. 2023__ - Introduction to hybrid semantics ([Slides](slides/hybridProgramming.pdf))
   - __28 apr. 2023__ - A zoo of hybrid programs ([Slides](slides/hybridProgramming.pdf))
+  - __02 may  2023__ - A brief overview of simply-typed lambda-calculus ([Slides](slides/Monads/lambdaCalc.pdf))
 # Assessment
 
 Assessment consist of the following items:
