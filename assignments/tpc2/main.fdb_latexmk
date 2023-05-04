@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex main"] 1682683496 "main.aux" "main.bbl" "main" 1682683497
+["bibtex main"] 1683199044 "main.aux" "main.bbl" "main" 1683199045
   "/usr/share/texmf-dist/bibtex/bst/base/alpha.bst" 1650183167 23907 a5f93555796fb564b924339521f10a7c ""
   "biblioTeaching.bib" 0 -1 0 ""
-  "main.aux" 1682683497 763 37494413295fe11bdb68a45ee71be57c "pdflatex"
+  "main.aux" 1683199044 763 37494413295fe11bdb68a45ee71be57c "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
-["pdflatex"] 1682683496 "main.tex" "main.pdf" "main" 1682683497
+["pdflatex"] 1683199044 "main.tex" "main.pdf" "main" 1683199045
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc" 1650183167 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc" 1650183167 2840 216e6e45ad352e2456e1149f28885bee ""
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc" 1650183167 2327 9d6df24f9c4f7368395224341a95523a ""
@@ -117,10 +117,10 @@
   "/usr/share/texmf-dist/web2c/texmf.cnf" 1650183167 39911 2da6c67557ec033436fe5418a70a8a61 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1657031230 4283473 0845eee95dc89f9b12a9a62b7daed425 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1657031226 2927655 23089e3b11ce63140747e28b128cf4b9 ""
-  "main.aux" 1682683497 763 37494413295fe11bdb68a45ee71be57c "pdflatex"
+  "main.aux" 1683199044 763 37494413295fe11bdb68a45ee71be57c "pdflatex"
   "main.bbl" 0 -1 0 "bibtex main"
   "main.out" 0 -1 0 "pdflatex"
-  "main.tex" 1682683493 6504 e276a921864fb52348503e195b7c5acb ""
+  "main.tex" 1683199040 6506 b9ccf6d8210179297193e5cc743b3298 ""
   (generated)
   "main.aux"
   "main.log"

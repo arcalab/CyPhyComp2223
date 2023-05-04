@@ -77,8 +77,8 @@ messages (i.e. $m$). Specifically, we adopt the following semantic rules:
                 \langle \mathtt{t}, \sigma \rangle \Downarrow \mathtt{r}
                 }
         \hspace{2cm}
-        \infer[(\text{wait})]{
-                \langle \mathtt{\blue{wait_m}(p)}, \sigma \rangle
+        \infer[(\text{write})]{
+                \langle \mathtt{\blue{write_m}(p)}, \sigma \rangle
                 \Downarrow m \conc n, \sigma'
         }{
                 \langle \mathtt{p}, \sigma \rangle \Downarrow n, \sigma'      
