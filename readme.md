@@ -64,6 +64,9 @@ At the end of the module, the student will:
   - __18 apr. 2023__ - Introduction to hybrid semantics ([Slides](slides/hybridProgramming.pdf))
   - __28 apr. 2023__ - A zoo of hybrid programs ([Slides](slides/hybridProgramming.pdf))
   - __02 may  2023__ - A brief overview of simply-typed lambda-calculus ([Slides](slides/Monads/lambdaCalc.pdf))
+  - __05 may  2023__ - Continuation of the previous lecture ([Slides](slides/Monads/lambdaCalc.pdf))
+  - __16 may  2023__ - lambda-calculus and algebraic operations ([Slides](slides/Monads/stlcE.pdf))
+  - __19 may  2023__ - Written assessment.
 # Assessment
 
 Assessment consist of the following items:
