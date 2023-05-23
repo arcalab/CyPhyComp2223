@@ -67,6 +67,7 @@ At the end of the module, the student will:
   - __05 may  2023__ - Continuation of the previous lecture ([Slides](slides/Monads/lambdaCalc.pdf))
   - __16 may  2023__ - lambda-calculus and algebraic operations ([Slides](slides/Monads/stlcE.pdf))
   - __19 may  2023__ - Written assessment.
+  - __23 may  2023__ - Working with monads ([Code](slides/Monads/code.zip))
 # Assessment
 
 Assessment consist of the following items:
