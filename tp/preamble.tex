@@ -1,0 +1,56 @@
+\usepackage{etex} % fixes new-dimension error
+\usepackage{lmodern} % fixes warnings
+\usepackage{textcomp}% fixes warnings
+
+\usepackage{graphicx,amsmath}
+\usepackage{stmaryrd} % cf. interleave
+%\usepackage{./macros/myisolatin1}
+%\usepackage{./macros/prooftree}
+\usepackage{alltt}
+%\usepackage{./macros/circle}
+\usepackage{listings}
+\usepackage{relsize} % relative size fonts
+\usepackage[normalem]{ulem} % strikethrough text (with \sout{.})
+\usepackage{tikz}
+\usetikzlibrary{%
+  positioning
+ ,patterns
+ ,arrows
+ ,calc
+ ,shapes
+ ,fit
+ ,fadings
+ ,decorations.pathreplacing
+ ,plotmarks
+% ,pgfplots.groupplots
+ ,decorations.markings
+}
+\usepackage[normalem]{ulem} % striking out text with \sout{...}
+\usepackage{xspace}
+
+% Nicer TT fonts
+%\usepackage[scaled=.83]{beramono}
+\usepackage[T1]{fontenc}
+
+
+
+
+%------ using eurosym -------------------------------------------------------
+\usepackage{eurosym}
+\def\inh#1{\mbox{\small\euro}_{#1}}
+\def\eith#1#2{\mathopen{[}#1 \ ,#2\mathclose{]}}
+
+%------ using xy ------------------------------------------------------------
+\usepackage[all]{xy}
+%\def\larrow#1#2#3{\xymatrix{ #3 & #1 \ar[l] _-{#2} }}
+\def\larrow#1#2#3{\xymatrix{ #3 & #1 \ar[l] _--{#2} }}
+\def\rarrow#1#2#3{\xymatrix{ #1 \ar[r]^-{#2} & #3 }}
+\def\arLaw#1#2#3#4#5{
+\xymatrix{
+        #1      \ar@/^1pc/[rr]^-{#4} &
+        #5 &
+        #2      \ar@/^1pc/[ll]^-{#3}
+}}
+\def\arLeq#1#2#3#4{\arLaw{#1}{#2}{#3}{#4}\leq}
+%------ using pstricks (rnode etc) ------------------------------------------
+%\usepackage{pstricks,pst-node,pst-text,pst-3d}

@@ -1,0 +1,144 @@
+\documentclass[11pt]{article}
+
+%\renewcommand\familydefault{\sfdefault}
+ 
+%input preamble and macros
+\input{preamble}
+\input{macros}
+
+ 
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{hyperref}
+\usepackage[linewidth=1pt]{mdframed}
+\usepackage{proof}
+%\newcommand{\N}{\mathbb{N}}
+%\newcommand{\Z}{\mathbb{Z}}
+
+% Named environments (no counters) 
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+%\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+%\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{question}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+ 
+% Environments with counters
+\newtheoremstyle{myplain} {5mm}% ⟨Space above⟩
+{3mm}% ⟨Space below⟩
+{}% ⟨Body font⟩
+{}% ⟨Indent amount⟩
+{\bfseries}% ⟨Theorem head font⟩
+{.}% ⟨Punctuation after theorem head⟩
+{.5em}% ⟨Space after theorem head⟩2
+{}% ⟨Theorem head spec (can be left empty, meaning ‘normal’)⟩
+
+\date{}
+
+\theoremstyle{myplain}
+\newtheorem{exercise}{Exercise}
+
+\theoremstyle{definition} % no italics
+\newtheorem{subexercise}{}[exercise]
+
+\newcommand{\subex}[1]{\begin{subexercise}#1\end{subexercise}}
+
+\begin{document}
+ 
+% --------------------------------------------------------------
+%                         Start here
+% --------------------------------------------------------------
+ 
+\title{Cyber-Physical Computation
+\\ {\small Last assignment}}
+\author{José Proença and Renato Neves}
+ 
+\maketitle
+
+\subsubsection*{First task (managing shared resources with \textsc{Uppaal})}
+Consider a small private airfield used by 2 planes, which can be either flying,
+parked, landing, or taking off. The landing field is a shared resource by both
+planes. Consider the following requirements:
+\begin{itemize}
+  \setlength\itemsep{0.3mm}
+  \item only 1 plane can use the field at a time;
+  \item a Controller component receives requests to \emph{land} or to \emph{take off}, and replies with a \emph{wait} signal when the field is not available;
+  \item each plane sends requests to the Controller to \emph{land} or to \emph{take off}, and sends notifications when the field becomes \emph{free};
+  \item the Controller has 5 time units to notify a plane to wait;
+  \item after 5 time units from requesting access to the field and with no wait signal, the planes take another 5 time units to reach the field.
+  \item each plane takes non-deterministically between 1-3 time units to take off, and between 4-6 time units to land and park.
+  \item after taking off and after parking the planes notify the Controller with a \emph{gone} signal.
+  \item if a plane is told to wait, we assume it will take between 5-7 time units to reach the field.
+\end{itemize}
+
+\noindent
+Suggest a model for the planes and the controller. List 4 to 8 desired
+properties that the model should satisfy. Verify the properties via
+\textsc{Uppaal}.
+
+\noindent {\underline{Extra points}:} Extend your model to handle $n$
+planes at once.
+
+\subsubsection*{Second task (small essay)}
+
+Write a small essay detailing the differences between modelling and
+verification (as you saw in \textsc{Uppaal}) and programming.  If possible
+complement your explanations with a concrete running example.
+
+\subsubsection*{Third task (program semantics and monads)}
+Consider the following \emph{probabilistic} while-language.
+\[
+        \mathtt{Prog}(X) \ni \mathtt{x\ \blue{:=}\ t} \mid
+        \mathtt{p} \, \blue{+}_p \, \mathtt{q} \mid
+	\mathtt{p \> \blue{;} \> q} \mid
+	\mathtt{\blue{if} \> b \> \blue{then} \> p \> \blue{else} \> q} \mid
+	\mathtt{\blue{while} \> b \> \blue{do} \> \{ \> p \> \}}
+\]
+Notice that it contains a new language construct: namely $\mathtt{p} \>
+\blue{+}_p \> \mathtt{q}$ which runs $\mathtt{p}$ with probability $p$ and
+$\mathtt{q}$ with probability $1 - p$.  Develop a new semantics for the
+extended language and implement it in \textsc{Haskell} using the probability
+monad.
+
+Here are some suggestions to help you get started: use the code developed in
+previous lectures and also the library with the probability monad (available on
+the website). Regarding the semantics, start with the following rule for
+sequential composition and then try to derive the others.
+\begin{flalign*}
+        \infer[(\text{seq})]{
+                \langle \mathtt{p\ \blue{;}\ q}, \sigma \rangle \Downarrow
+                \sum_{i}^n p_i \cdot \mu_i 
+        }{
+                \langle \mathtt{p}, \sigma \rangle \Downarrow 
+                \sum_i^n p_i \cdot \sigma_i 
+                \qquad
+                \forall i \leq n. \, 
+                \langle \mathtt{q}, \sigma_i \rangle \Downarrow \mu_i
+        }
+\end{flalign*}
+
+\noindent {\underline{Extra points}:} Extend the semantics to handle a
+selection of your favorite effects, for example delays, log messages,
+or exceptions.
+
+\bigskip
+
+\begin{mdframed}  
+  \myparagraph{What to submit:} A single report in PDF for all tasks 
+  \textbf{and} all the relevant source files. 
+  Send by email
+  (\underline{nevrenato@gmail.com}) a unique zip file
+  ``\bash{cpc2223-N1_N2.zip}'', where \bash{N1} and \bash{N2} are your
+  student numbers. The subject of the email should be ``\bash{cpc2223
+    N1 N2}''.
+
+\myparagraph{Deadline:} 26th June 2023 @ 23h59
+\end{mdframed}
+
+\end{document}
