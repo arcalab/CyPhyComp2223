@@ -76,8 +76,8 @@ Assessment consist of the following items:
   * [TPC1 (15%)](assignments/tpc1-cpc.pdf)
   * [TPC2 (15%)](assignments/tpc2-cpc.pdf) 
 + Individual test (30% - 19th May);
-+ Group assignment: modelling and analysis of a cyber-physical system
-  via [Uppaal]([http://www.uppaal.org/]) and via [Haskell]([https://www.haskell.org/]) (40% - not yet available);
++ [Group assignment](tp.pdf) (40% - 26th June);
+  
 
 
 # Bibliography
